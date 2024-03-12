@@ -17,6 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Setting Up
 ```
-# Copy .env.example to .env
-cp .env.example .env
+# Copy assets/.env.example to assets/.env
+cp assets/.env.example assets/.env
 ```
