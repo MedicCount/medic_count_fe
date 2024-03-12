@@ -4,8 +4,10 @@ import 'package:medic_count_fe/firebase_options.dart';
 import 'package:medic_count_fe/pages/loginPage.dart';
 import 'package:medic_count_fe/pages/prePage.dart';
 import 'pages/home.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   initializeFirebase();
   runApp(const MyApp());
