@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medic_count_fe/components/baseButton.dart';
-import 'package:medic_count_fe/pages/loginPage.dart';
+import 'package:medic_count_fe/components/base_button.dart';
+import 'package:medic_count_fe/pages/login.dart';
 
 class PrePage extends StatelessWidget {
 
@@ -33,7 +33,7 @@ class PrePage extends StatelessWidget {
                   Container(
                     height: 450,
                   ),
-                  Text(
+                  const Text(
                     'Explore the app',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -45,7 +45,7 @@ class PrePage extends StatelessWidget {
                   Container(
                     height: 20,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 140,
                     child: Expanded(
                       child: Text(
@@ -63,7 +63,7 @@ class PrePage extends StatelessWidget {
                       goTo: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => LoginPage(),
+                            builder: (context) => const LoginPage(),
                           ),
                         );
                       }),

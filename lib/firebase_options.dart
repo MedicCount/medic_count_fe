@@ -45,7 +45,7 @@ class DefaultFirebaseOptions {
   }
 
   static FirebaseOptions web = FirebaseOptions(
-    apiKey: '${dotenv.env['FIREBASE_WEB_API']!}',
+    apiKey: dotenv.env['FIREBASE_WEB_API']!,
     appId: '1:501019962241:web:542a2dd153801b26c85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',
@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
   );
 
   static FirebaseOptions android = FirebaseOptions(
-    apiKey: '${dotenv.env['FIREBASE_ANDROID_API']!}',
+    apiKey: dotenv.env['FIREBASE_ANDROID_API']!,
     appId: '1:501019962241:android:d122b59e8ab319f0c85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',
@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
   );
 
   static FirebaseOptions ios = FirebaseOptions(
-    apiKey: '${dotenv.env['FIREBASE_APPLE_API']!}',
+    apiKey: dotenv.env['FIREBASE_APPLE_API']!,
     appId: '1:501019962241:ios:a9a288d157efed73c85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
   );
 
   static FirebaseOptions macos = FirebaseOptions(
-    apiKey: '${dotenv.env['FIREBASE_APPLE_API']!}',
+    apiKey: dotenv.env['FIREBASE_APPLE_API']!,
     appId: '1:501019962241:ios:8405e9014bc5c53bc85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',

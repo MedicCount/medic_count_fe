@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:medic_count_fe/firebase_options.dart';
-import 'package:medic_count_fe/pages/notFoundPage.dart';
-import 'package:medic_count_fe/pages/homePage.dart';
-import 'package:medic_count_fe/pages/prePage.dart';
+import 'package:medic_count_fe/pages/not_found.dart';
+import 'package:medic_count_fe/pages/home.dart';
+import 'package:medic_count_fe/pages/introduction.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {

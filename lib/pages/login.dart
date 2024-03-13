@@ -2,15 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:medic_count_fe/components/baseButton.dart';
-import 'package:medic_count_fe/components/baseModal.dart';
-import 'package:medic_count_fe/pages/homePage.dart';
+import 'package:medic_count_fe/components/base_button.dart';
+import 'package:medic_count_fe/components/base_modal.dart';
+import 'package:medic_count_fe/pages/home.dart';
 
 class LoginPage extends StatefulWidget {
-  
-  const LoginPage({
-    Key? key,
-  }) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -28,11 +25,13 @@ class _LoginPageState extends State<LoginPage> {
       TextButton(
         child: const Text('OK'),
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(_modalContext!).pop();
         },
       ),
     ],
   );
+
+  BuildContext? _modalContext;
 
   Future<String?> loginDefault(String email, String password) async {
     try {
@@ -54,12 +53,12 @@ class _LoginPageState extends State<LoginPage> {
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
 
-    final credetial = GoogleAuthProvider.credential(
+    final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
 
-    return FirebaseAuth.instance.signInWithCredential(credetial);
+    return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
@@ -109,22 +108,20 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(
                                 fontSize: 70,
                                 fontWeight: FontWeight.bold,
-                                color:
-                                    Colors.black, // Set the default text color
+                                color: Colors.black,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: 'C', // Make the letter 'c' blue
+                                  text: 'C',
                                   style: TextStyle(
                                       color: Color.fromRGBO(128, 0, 255, 1)),
                                 ),
                                 TextSpan(
-                                  text: 'ine', // Remaining text after 'c'
+                                  text: 'ine',
                                   style: TextStyle(
                                     fontSize: 70,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors
-                                        .black, // Set the default text color
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
@@ -132,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 20),
                           TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Email',
                               hintText: 'Enter your email',
                             ),
@@ -147,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             child: TextFormField(
                               obscureText: true,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Password',
                                 hintText: 'Enter your password',
                               ),
@@ -180,19 +177,23 @@ class _LoginPageState extends State<LoginPage> {
                                 var password = passwordController.text;
                                 var uid = await loginDefault(email, password);
                                 if (uid == null) {
-                                  modal.dialogBuilder(context);
+                                  modal.dialogBuilder(_modalContext!);
                                 } else {
-                                  print('Login successful');
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const HomePage(),
-                                  ));
+                                  if (!context.mounted) {
+                                    return;
+                                  } else {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const HomePage(),
+                                    ));
+                                  }
                                 }
                               }
                             },
                             label: 'Login',
                           ),
                           Container(
-                            margin: const EdgeInsets.only(top: 40, bottom: 40),
+                            margin: const EdgeInsets.only(
+                                top: 40, bottom: 40),
                             child: const Row(
                               children: [
                                 Expanded(
@@ -202,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                       horizontal: 8.0),
                                   child: Text(
                                     'Or sign up with',
@@ -222,8 +223,29 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              side: const BorderSide(
+                                color: Colors.black,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () async {
+                              var userCredential = await loginGoogle();
+                              if (userCredential != null) {
+                                  if (!context.mounted) {
+                                    return;
+                                  } else {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const HomePage(),
+                                    ));
+                                  }
+                              }
+                            },
                             child: Container(
-                              margin: EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -235,39 +257,21 @@ class _LoginPageState extends State<LoginPage> {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
-                                  Text('Login with Google'),
+                                  const SizedBox(width: 10),
+                                  const Text('Login with Google'),
                                 ],
                               ),
                             ),
-                            style: OutlinedButton.styleFrom(
-                              primary: Colors.black,
-                              side: BorderSide(
-                                color: Colors.black,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () async {
-                              var userCredential = await loginGoogle();
-                              if (userCredential != null) {
-                                print(userCredential.toString());
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
-                                ));
-                              }
-                            },
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 40),
+                            margin: const EdgeInsets.only(top: 40),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Not register yet ? '),
+                                const Text('Not register yet ? '),
                                 InkWell(
                                   onTap: () {},
-                                  child: Text('Create Account',
+                                  child: const Text('Create Account',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)),
                                 ),

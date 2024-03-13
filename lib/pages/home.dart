@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medic_count_fe/components/baseSignOut.dart';
+import 'package:medic_count_fe/components/base_sign_out.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,10 +15,10 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           children: [
-            Text('Home Page'),
+            const Text('Home Page'),
             IconButton(onPressed: () {
               signOut(context);
-            }, icon: Icon(Icons.logout))
+            }, icon: const Icon(Icons.logout))
           ],
         ),
       ),
