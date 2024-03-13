@@ -7,7 +7,7 @@
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.501019962241-jv189goa370gbq3dgj3sek5p7gh519ur</string>
 	<key>API_KEY</key>
-	<string>${dotenv.env['GOOGLE_API_KEY']}</string>
+	<string>${dotenv.env['FIREBASE_APPLE_API']}</string>
 	<key>GCM_SENDER_ID</key>
 	<string>501019962241</string>
 	<key>PLIST_VERSION</key>

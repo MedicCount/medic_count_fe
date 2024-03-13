@@ -4,7 +4,10 @@ import 'package:medic_count_fe/components/baseButton.dart';
 import 'package:medic_count_fe/pages/loginPage.dart';
 
 class PrePage extends StatelessWidget {
-  const PrePage({Key? key});
+
+  const PrePage({
+    super.key,
+  }) : super();
 
   @override
   Widget build(BuildContext context) {

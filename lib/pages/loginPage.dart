@@ -4,10 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medic_count_fe/components/baseButton.dart';
 import 'package:medic_count_fe/components/baseModal.dart';
-import 'package:medic_count_fe/pages/home.dart';
+import 'package:medic_count_fe/pages/homePage.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  
+  const LoginPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -31,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     ],
   );
 
-  Future<String?> login_default(String email, String password) async {
+  Future<String?> loginDefault(String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
@@ -46,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  Future<UserCredential?> login_google() async {
+  Future<UserCredential?> loginGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -175,13 +178,13 @@ class _LoginPageState extends State<LoginPage> {
                               if (_formKey.currentState!.validate()) {
                                 var email = emailController.text;
                                 var password = passwordController.text;
-                                var uid = await login_default(email, password);
+                                var uid = await loginDefault(email, password);
                                 if (uid == null) {
                                   modal.dialogBuilder(context);
                                 } else {
                                   print('Login successful');
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const Home(),
+                                    builder: (context) => const HomePage(),
                                   ));
                                 }
                               }
@@ -247,11 +250,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             onPressed: () async {
-                              var userCredential = await login_google();
+                              var userCredential = await loginGoogle();
                               if (userCredential != null) {
                                 print(userCredential.toString());
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const Home(),
+                                  builder: (context) => const HomePage(),
                                 ));
                               }
                             },
