@@ -5,6 +5,16 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Not Found'),
+            Text('404', style: TextStyle(fontSize: 40)),
+          ],
+        ),
+      ),
+    );
   }
 }
