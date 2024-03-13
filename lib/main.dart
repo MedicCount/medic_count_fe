@@ -1,16 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:medic_count_fe/firebase_options.dart';
-import 'package:medic_count_fe/pages/create_account.dart';
 import 'package:medic_count_fe/pages/home.dart';
 import 'package:medic_count_fe/pages/introduction.dart';
 import 'package:medic_count_fe/pages/not_found.dart';
-
-import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -47,7 +43,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Medic Count',
       theme: ThemeData(
-        fontFamily: GoogleFonts.roboto(),
+        fontFamily: GoogleFonts.outfit().fontFamily,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF8000FF),
           primary: const Color(0xFF8000FF),
@@ -85,8 +81,7 @@ class _MyAppState extends State<MyApp> {
             if (snapshot.hasData) {
               return page;
             } else {
-              // return const PrePage();
-              return const CreateAccount();
+              return const PrePage();
             }
           }
         },

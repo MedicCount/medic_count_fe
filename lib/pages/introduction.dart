@@ -60,7 +60,7 @@ class PrePage extends StatelessWidget {
                   ),
                   BaseButton(
                       label: "Let's Start",
-                      goTo: () {
+                      function: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => const LoginPage(),
