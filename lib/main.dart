@@ -8,7 +8,7 @@ import 'package:medic_count_fe/pages/prePage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: "assets/.env");
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
   runApp(const MyApp());
@@ -28,6 +28,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  
   late Stream<User?> _authStateStream;
 
   @override
@@ -82,8 +83,8 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AuthCheck extends StatelessWidget {
-  final Stream<User?> authStateStream;
 
+  final Stream<User?> authStateStream;
   const AuthCheck({Key? key, required this.authStateStream}) : super(key: key);
 
   @override

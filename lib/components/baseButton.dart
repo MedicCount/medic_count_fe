@@ -14,26 +14,26 @@ class BaseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(label,
-                style: TextStyle(
-                  color: Colors.white,
-                )),
-          ),
-        ],
-      ),
       style: TextButton.styleFrom(
-        backgroundColor: Color.fromRGBO(128, 0, 255, 1),
+        backgroundColor: const Color.fromRGBO(128, 0, 255, 1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       onPressed: () => goTo(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(label,
+                style: const TextStyle(
+                  color: Colors.white,
+                )),
+          ),
+        ],
+      ),
     );
   }
 }
