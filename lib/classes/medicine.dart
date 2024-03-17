@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
 class Medicine {
   final String _id;
   String _name;
-  Image _image;
+  File _image;
   late int _counts;
 
   Medicine(this._id, this._name, this._image);
@@ -20,7 +20,7 @@ class Medicine {
     _name = name;
   }
 
-  set setImage(Image image) {
+  set setImage(File image) {
     _image = image;
   }
 
@@ -30,6 +30,6 @@ class Medicine {
 
   String get getId => _id;
   String get getName => _name;
-  Image get getImage => _image;
+  File get getImage => _image;
   int get getCount => _counts;
 }

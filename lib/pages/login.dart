@@ -55,12 +55,16 @@ class _LoginPageState extends State<LoginPage> {
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    return FirebaseAuth.instance.signInWithCredential(credential);
+    try {
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      return FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (error) {
+      print('Error signing in with Google: $error');
+      return null;
+    }
   }
 
   @override
