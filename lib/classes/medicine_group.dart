@@ -1,4 +1,4 @@
-import 'medicine.dart';
+import 'package:medic_count_fe/classes/medicine.dart';
 
 class MedicineGroup {
   final List<Medicine> _medicineGroup;

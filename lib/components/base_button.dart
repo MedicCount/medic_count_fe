@@ -23,8 +23,8 @@ class BaseButton extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10),
             child: Text(
-                label,
-                style: TextStyle(
+              label,
+              style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
                 fontWeight: FontWeight.bold,
               )

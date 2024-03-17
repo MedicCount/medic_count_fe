@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Medicine {
-  String _id;
+  final String _id;
   String _name;
   Image _image;
   late int _counts;
