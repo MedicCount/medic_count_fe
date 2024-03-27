@@ -91,7 +91,6 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AuthCheck extends StatelessWidget {
-
   final Stream<User?> authStateStream;
   const AuthCheck({Key? key, required this.authStateStream}) : super(key: key);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medic_count_fe/components/base_sign_out.dart';
 import 'package:medic_count_fe/sub_pages/counted.dart';
 import 'package:medic_count_fe/sub_pages/groups.dart';
 import 'package:medic_count_fe/sub_pages/settings.dart';
@@ -18,11 +19,44 @@ class _HomePageState extends State<HomePage> {
     StatPage(),
     SettingPage(),
   ];
+  List<String> headerLabel = ['Home', 'Groups', 'Statistics', 'Settings'];
   int indexBottomNav = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: () {
+          if (headerLabel[indexBottomNav] == 'Settings') {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  headerLabel[indexBottomNav],
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    signOut(context);
+                  },
+                  icon: const Icon(Icons.logout)),
+              ],
+            );
+          } else {
+            return Text(
+              headerLabel[indexBottomNav],
+              style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          }
+        }(),
+        automaticallyImplyLeading: false,
+      ),
       body: widgetOption[indexBottomNav],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -31,22 +65,22 @@ class _HomePageState extends State<HomePage> {
           setState(() => indexBottomNav = value);
         },
         currentIndex: indexBottomNav,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home),
+            label: headerLabel[0],
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.medical_services),
-            label: 'Groups',
+            icon: const Icon(Icons.medical_services),
+            label: headerLabel[1],
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            label: 'Statistics',
+            icon: const Icon(Icons.bar_chart_outlined),
+            label: headerLabel[2],
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: const Icon(Icons.settings),
+            label: headerLabel[3],
           ),
         ],
       ),
