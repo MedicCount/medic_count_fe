@@ -6,7 +6,11 @@ class Medicine {
   File _image;
   late int _counts;
 
-  Medicine(this._id, this._name, this._image);
+  Medicine(this._id, this._name, this._image) {
+    _counts = 0;
+  }
+
+  Medicine.withCount(this._id, this._name, this._image, this._counts);
 
   void increaseCount(int amount) {
     _counts += amount;

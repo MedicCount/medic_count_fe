@@ -23,15 +23,14 @@ class _CreateAccountState extends State<CreateAccount> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _confirmPasswordController.text);
-      if (!context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Account was Created!'),
-            duration: Duration(seconds: 5),
-          )
-        );
-        Navigator.of(context).pop();
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account was Created!'),
+          duration: Duration(seconds: 5),
+        )
+      );
+      Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');

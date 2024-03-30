@@ -40,51 +40,32 @@ class TemporaryAllDatas {
   }
 
   void _initialize() {
-    allMedicineGroups.addAll(
-      [
-        MedicineGroup(
-          [
-            Medicine(
-              '001',
-              'Alprazolam',
-              File(''),
-            ),
-            Medicine(
-              '002',
-              'Meclizine',
-              File(''),
-            ),
-          ],
-        ),
-        MedicineGroup(
-          [
-            Medicine(
-              '001',
-              'Alprazolam',
-              File(''),
-            ),
-            Medicine(
-              '002',
-              'Meclizine',
-              File(''),
-            ),
-          ],
-        ),
-        MedicineGroup(
-          [
-            Medicine(
-              '001',
-              'Alprazolam',
-              File(''),
-            ),
-            Medicine(
-              '002',
-              'Meclizine',
-              File(''),
-            ),
-          ],
-        ),
-      ]
-    );
+    allMedicineGroups = fetchMedicineGroups();
+  }
+
+  List<MedicineGroup> fetchMedicineGroups() {
+    return [
+      MedicineGroup(
+        "001",
+        [
+          Medicine.withCount('001', 'Alprazolam', File(''), 20),
+          Medicine('002', 'Meclizine', File('')),
+        ]
+      ),
+      MedicineGroup(
+        "002",
+        [
+          Medicine('003', 'Paracetamol', File('')),
+          Medicine.withCount('004', 'Ibuprofen', File(''), 20),
+        ]
+      ),
+      MedicineGroup(
+        "003",
+        [
+          Medicine.withCount('005', 'Loratadine', File(''), 20),
+          Medicine('006', 'Diphenhydramine', File('')),
+        ]
+      ),
+    ];
   }
 }

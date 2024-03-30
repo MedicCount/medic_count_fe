@@ -29,7 +29,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
   late Stream<User?> _authStateStream;
 
   @override
