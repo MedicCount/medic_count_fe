@@ -66,6 +66,13 @@ class TemporaryAllDatas {
           Medicine('006', 'Diphenhydramine', File('')),
         ]
       ),
+      MedicineGroup(
+        "004",
+        [
+          Medicine.withCount('005', 'Loratadine', File(''), 20),
+          Medicine('006', 'Diphenhydramine', File('')),
+        ]
+      ),
     ];
   }
 }
