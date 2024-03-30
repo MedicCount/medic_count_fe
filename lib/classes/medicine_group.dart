@@ -1,8 +1,8 @@
 import 'package:medic_count_fe/classes/medicine.dart';
 
 class MedicineGroup {
-  String _name;
-  final List<Medicine> _medicineGroup;
+  late String _name;
+  late List<Medicine> _medicineGroup;
   late DateTime _timestamp;
   
   MedicineGroup(this._name, this._medicineGroup) {
@@ -10,6 +10,16 @@ class MedicineGroup {
   }
   
   MedicineGroup.withTimestamp(this._name, this._medicineGroup, this._timestamp);
+
+  MedicineGroup.clone(MedicineGroup source) {
+    copy(source);
+  }
+
+  void copy(MedicineGroup source) {
+    _name = source._name;
+    _medicineGroup = source._medicineGroup;
+    _timestamp = source._timestamp;
+  }
 
   void addMedicine(Medicine medicine) {
     _medicineGroup.add(medicine);

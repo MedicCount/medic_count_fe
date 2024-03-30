@@ -44,6 +44,7 @@ dependencies:
   google_fonts: ^6.2.1
   camera: ^0.10.5+9
   provider: ^6.1.1
+  syncfusion_flutter_charts: ^25.1.37
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medic_count_fe/components/buttons.dart';
 
 class Camera extends StatefulWidget {
   const Camera({Key? key}) : super(key: key);
@@ -87,7 +88,7 @@ class _CameraState extends State<Camera> {
               children: <Widget>[
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 25),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height / 1.5,
                       child: controller == null || !controller!.value.isInitialized
@@ -99,54 +100,33 @@ class _CameraState extends State<Camera> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: getImageFromCamera,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Center(
-                      child: Text(
-                        "Capture",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  width: 150,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: BaseButton(
+                      function: getImageFromCamera,
+                      label: 'Capture',
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: getImageFromGallery,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Center(
-                      child: Text(
-                        "Use Local",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                const SizedBox(
+                  width: 20,
+                ),
+                SizedBox(
+                  width: 150,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: SecondaryButton(
+                      function: getImageFromGallery,
+                      label: 'Use Local',
                     ),
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

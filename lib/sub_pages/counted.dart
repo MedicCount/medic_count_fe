@@ -59,7 +59,7 @@ class _CountedPageState extends State<CountedPage> {
                           child: Text(
                             option,
                             style: TextStyle(
-                              color: _selectedValue == option ? Colors.white : Colors.black,
+                              color: _selectedValue == option ? Colors.white : Colors.grey,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -86,7 +86,7 @@ class _CountedPageState extends State<CountedPage> {
                       return MedicineGroupDisplay(
                         groupName: temp.getName,
                         timeCreated: temp.getTimestamp,
-                        medicineGroup: temp.getMedicineGroup,
+                        medicineGroup: temp,
                       );
                     }),
                   ),

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:medic_count_fe/classes/medicine.dart';
+import 'package:medic_count_fe/classes/medicine_group.dart';
+import 'package:medic_count_fe/pages/edit_group.dart';
 
 class MedicineGroupDisplay extends StatelessWidget {
   final String groupName;
   final DateTime timeCreated;
-  final List<Medicine> medicineGroup;
+  final MedicineGroup medicineGroup;
 
   const MedicineGroupDisplay({
     super.key,
     required this.groupName,
     required this.timeCreated,
-    required this.medicineGroup
+    required this.medicineGroup,
   });
 
   @override
@@ -87,9 +88,21 @@ class MedicineGroupDisplay extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 5),
-                        const Icon(
-                          Icons.edit,
-                          color: Colors.white,
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
+                          style: const ButtonStyle(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditGroupsPage(
+                              medicineGroups: medicineGroup,
+                            )));
+                          },
                         ),
                       ],
                     ),
@@ -108,7 +121,7 @@ class MedicineGroupDisplay extends StatelessWidget {
               ),
             ),
             child: Column(
-              children: medicineGroup.map((medicine) {
+              children: medicineGroup.getMedicineGroup.map((medicine) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

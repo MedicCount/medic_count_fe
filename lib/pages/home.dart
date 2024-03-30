@@ -13,15 +13,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Widget> widgetOption = const <Widget>[
-    CountedPage(),
-    GroupsPage(),
-    StatPage(),
-    SettingPage(),
-  ];
-  List<String> headerLabel = ['Counted Medicines', 'Create New Group', 'Statistics', 'Settings'];
-  List<String> bottomNavLabel = ['Home', 'Groups', 'Statistics', 'Settings'];
   int indexBottomNav = 0;
+  List<Widget> widgetOption = [
+    const CountedPage(),
+    const GroupsPage(),
+    const StatPage(),
+    const SettingPage(),
+  ];
+
+  List<String> headerLabel = [
+    'Counted Medicines',
+    'Create New Group',
+    'Statistics',
+    'Settings',
+    'Edit Group'
+  ];
+  List<String> bottomNavLabel = ['Home', 'Groups', 'Statistics', 'Settings'];
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +50,8 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     signOut(context);
                   },
-                  icon: const Icon(Icons.logout)),
+                  icon: const Icon(Icons.logout),
+                ),
               ],
             );
           } else {
@@ -63,7 +71,9 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         onTap: (value) {
-          setState(() => indexBottomNav = value);
+          setState(() {
+            indexBottomNav = value;
+          });
         },
         currentIndex: indexBottomNav,
         items: <BottomNavigationBarItem>[

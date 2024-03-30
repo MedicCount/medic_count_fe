@@ -4,6 +4,7 @@ import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/datasources/all_datasources.dart';
+import 'package:medic_count_fe/pages/camera.dart';
 
 class GroupsPage extends StatefulWidget {
   const GroupsPage({Key? key}) : super(key: key);
@@ -13,7 +14,8 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
-  final List<MedicineGroup> medicineGroups = TemporaryAllDatas().allMedicineGroups;
+  final List<MedicineGroup> medicineGroups =
+      TemporaryAllDatas().allMedicineGroups;
   final List<String> sortOptions = ['Name', 'Date Created'];
 
   final ScrollController _scrollController = ScrollController();
@@ -60,7 +62,9 @@ class _GroupsPageState extends State<GroupsPage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: BaseButton(
-                function: () {},
+                function: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Camera()));
+                },
                 label: 'Add New',
               ),
             ),
@@ -78,48 +82,52 @@ class _GroupsPageState extends State<GroupsPage> {
                 1: FlexColumnWidth(1.5),
                 2: FlexColumnWidth(0.5),
                 3: FlexColumnWidth(0.5),
+                4: FlexColumnWidth(0.5),
+                5: FlexColumnWidth(0.1),
               },
               children: const <TableRow>[
-                TableRow(
-                  children: <Widget>[
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          'Medicine Names',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
+                TableRow(children: <Widget>[
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        'Medicine Names',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
                         ),
                       ),
                     ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          'Total Count',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        'Total Count',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
                         ),
                       ),
                     ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: SizedBox(width: 8),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: SizedBox(width: 8),
-                    ),
-                  ]
-                ),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: SizedBox(width: 8),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: SizedBox(width: 8),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: SizedBox(width: 8),
+                  ),
+                ]),
               ],
             ),
             SizedBox(
@@ -137,33 +145,40 @@ class _GroupsPageState extends State<GroupsPage> {
                       1: FlexColumnWidth(1.5),
                       2: FlexColumnWidth(0.5),
                       3: FlexColumnWidth(0.5),
-                      4: FlexColumnWidth(0.1),
+                      4: FlexColumnWidth(0.5),
+                      5: FlexColumnWidth(0.1),
                     },
                     children: <TableRow>[
-                      for (final Medicine medicine in medicineGroups[0].getMedicineGroup +
-                          medicineGroups[0].getMedicineGroup +
-                          medicineGroups[0].getMedicineGroup +
-                          medicineGroups[0].getMedicineGroup)
+                      for (final Medicine medicine
+                          in medicineGroups[0].getMedicineGroup +
+                              medicineGroups[0].getMedicineGroup +
+                              medicineGroups[0].getMedicineGroup +
+                              medicineGroups[0].getMedicineGroup)
                         TableRow(
                           children: <Widget>[
                             TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
                               child: Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
                                     child: Icon(
                                       Icons.circle,
                                       size: 8,
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Text(
-                                      medicine.getName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18,
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Text(
+                                        medicine.getName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
@@ -171,29 +186,43 @@ class _GroupsPageState extends State<GroupsPage> {
                               ),
                             ),
                             TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Text(
-                                  NumberFormat('#,##0').format(medicine.getCount),
+                                  NumberFormat('#,##0')
+                                      .format(medicine.getCount),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
                             const TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
                               child: Icon(Icons.image),
                             ),
+                            TableCell(
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              child: IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {},
+                              ),
+                            ),
                             const TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
                               child: Icon(Icons.remove_circle_outline_outlined),
                             ),
                             const TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
                               child: SizedBox(),
                             ),
                           ],
