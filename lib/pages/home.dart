@@ -19,7 +19,8 @@ class _HomePageState extends State<HomePage> {
     StatPage(),
     SettingPage(),
   ];
-  List<String> headerLabel = ['Home', 'Groups', 'Statistics', 'Settings'];
+  List<String> headerLabel = ['Counted Medicines', 'Create New Group', 'Statistics', 'Settings'];
+  List<String> bottomNavLabel = ['Home', 'Groups', 'Statistics', 'Settings'];
   int indexBottomNav = 0;
 
   @override
@@ -68,19 +69,19 @@ class _HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: headerLabel[0],
+            label: bottomNavLabel[0],
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.medical_services),
-            label: headerLabel[1],
+            label: bottomNavLabel[1],
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.bar_chart_outlined),
-            label: headerLabel[2],
+            label: bottomNavLabel[2],
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.settings),
-            label: headerLabel[3],
+            label: bottomNavLabel[3],
           ),
         ],
       ),

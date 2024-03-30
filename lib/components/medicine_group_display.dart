@@ -124,7 +124,7 @@ class MedicineGroupDisplay extends StatelessWidget {
                         Text(
                           medicine.getName,
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             fontSize: 18,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -137,7 +137,7 @@ class MedicineGroupDisplay extends StatelessWidget {
                         Text(
                           NumberFormat('#,##0').format(medicine.getCount),
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             fontSize: 18,
                           ),
                           overflow: TextOverflow.ellipsis,

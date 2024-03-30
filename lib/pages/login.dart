@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:medic_count_fe/components/base_button.dart';
 import 'package:medic_count_fe/components/base_modal.dart';
+import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/pages/create_account.dart';
 import 'package:medic_count_fe/pages/forgot_password.dart';
 import 'package:medic_count_fe/pages/home.dart';
@@ -276,7 +276,13 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     const SizedBox(width: 10),
-                                    const Text('Login with Google'),
+                                    const Text(
+                                      'Login with Google',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

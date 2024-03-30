@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medic_count_fe/components/base_button.dart';
+import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/pages/login.dart';
 
 class PrePage extends StatelessWidget {
