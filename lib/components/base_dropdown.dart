@@ -21,6 +21,7 @@ class _BaseDropdownState extends State<BaseDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 30,
       padding: EdgeInsets.only(left: 10, right: 10),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -39,7 +40,11 @@ class _BaseDropdownState extends State<BaseDropdown> {
         items: widget.list.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
-            child: Text(value),
+            child: Text(value,
+              style: TextStyle(
+                fontSize: 12,
+              )
+            ),
           );
         }).toList(),
       ),
