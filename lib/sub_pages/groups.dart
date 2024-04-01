@@ -63,9 +63,7 @@ class _GroupsPageState extends State<GroupsPage> {
               child: BaseButton(
                 function: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const Camera(
-                      mid: "None",
-                    )));
+                    MaterialPageRoute(builder: (context) => const Camera()));
                 },
                 label: 'Add New',
               ),

@@ -89,7 +89,7 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                 child: BaseButton(
                   function: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Camera(
-                      mid: widget.medicineGroups.getMgid,
+                      mgid: widget.medicineGroups.getMgid,
                     )));
                   },
                   label: 'Add New',

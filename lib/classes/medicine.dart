@@ -5,12 +5,15 @@ class Medicine {
   String _name;
   File? _image;
   late int _counts;
+  late List<dynamic> labels;
 
   Medicine(this._groupId, this._name, this._image) {
     _counts = 0;
   }
 
   Medicine.withCount(this._groupId, this._name, this._image, this._counts);
+
+  Medicine.withCountwithLabel(this._groupId, this._name, this._image, this._counts, this.labels);
 
   void increaseCount(int amount) {
     _counts += amount;
@@ -36,13 +39,15 @@ class Medicine {
   String get getName => _name;
   File get getImage => _image!;
   int get getCount => _counts;
+  List<dynamic> get getLabels => labels;
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
-    return Medicine.withCount(
+    return Medicine.withCountwithLabel(
       json['groupId'],
       json['name'],
       File(json['_image']),
       json['counts'],
+      json['labels'],
     );
   }
 }

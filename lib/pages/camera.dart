@@ -7,9 +7,9 @@ import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/pages/process_image.dart';
 
 class Camera extends StatefulWidget {
-  final String mid;
+  final String? mgid;
 
-  const Camera({Key? key, required this.mid}) : super(key: key);
+  const Camera({Key? key, this.mgid}) : super(key: key);
 
   @override
   State<Camera> createState() => _CameraState();
@@ -62,7 +62,7 @@ class _CameraState extends State<Camera> {
   void navigateToProcessImage(XFile image) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProcessImage(
       image: File(image.path),
-      mid: widget.mid,
+      mgid: widget.mgid,
     )));
   }
 
