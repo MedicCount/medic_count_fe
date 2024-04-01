@@ -1,19 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
+import 'package:medic_count_fe/components/buttons.dart';
+import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/pages/edit_group.dart';
 
-class MedicineGroupDisplay extends StatelessWidget {
+class MedicineGroupDisplay extends StatefulWidget {
   final String groupName;
   final DateTime timeCreated;
   final MedicineGroup medicineGroup;
+  final Function() onUpdate;
+  final Function() onDelete;
 
   const MedicineGroupDisplay({
-    super.key,
+    Key? key,
     required this.groupName,
     required this.timeCreated,
     required this.medicineGroup,
-  });
+    required this.onUpdate,
+    required this.onDelete,
+  }) : super(key: key);
+
+  @override
+  State<MedicineGroupDisplay> createState() => _MedicineGroupDisplayState();
+}
+
+class _MedicineGroupDisplayState extends State<MedicineGroupDisplay> {
+  void _deleteMedicineGroup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Medicine Group'),
+        content: Text('Are you sure you want to delete ${widget.groupName}?'),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SecondaryButton(
+                function: () {
+                  Navigator.of(context).pop();
+                },
+                label: 'Cancel',
+              ),
+              const SizedBox(width: 20),
+              BaseButton(
+                function: () {
+                  TemporaryAllDatas().allMedicineGroups.removeWhere((item) => item == widget.medicineGroup);
+                  widget.onDelete();
+                  Navigator.of(context).pop();
+                },
+                label: 'Delete',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +90,7 @@ class MedicineGroupDisplay extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(
-                          groupName,
+                          widget.groupName,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -57,9 +100,19 @@ class MedicineGroupDisplay extends StatelessWidget {
                           maxLines: 1,
                         ),
                         const SizedBox(width: 5),
-                        const Icon(
-                          Icons.delete,
-                          color: Colors.white,
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                          style: const ButtonStyle(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () {
+                            _deleteMedicineGroup(context);
+                          },
                         ),
                       ],
                     ),
@@ -80,7 +133,7 @@ class MedicineGroupDisplay extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(
-                          DateFormat('dd/MM/yyyy HH:mm:ss').format(timeCreated),
+                          DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.timeCreated),
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -100,8 +153,8 @@ class MedicineGroupDisplay extends StatelessWidget {
                           ),
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditGroupsPage(
-                              medicineGroups: medicineGroup,
-                            )));
+                              medicineGroups: widget.medicineGroup,
+                            ))).then((value) => widget.onUpdate());
                           },
                         ),
                       ],
@@ -121,7 +174,7 @@ class MedicineGroupDisplay extends StatelessWidget {
               ),
             ),
             child: Column(
-              children: medicineGroup.getMedicineGroup.map((medicine) {
+              children: widget.medicineGroup.getMedicineGroup.map((medicine) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

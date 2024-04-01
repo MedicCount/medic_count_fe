@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medic_count_fe/components/buttons.dart';
+import 'package:medic_count_fe/pages/process_image.dart';
 
 class Camera extends StatefulWidget {
   const Camera({Key? key}) : super(key: key);
@@ -32,7 +35,7 @@ class _CameraState extends State<Camera> {
   void loadCamera() async {
     cameras = await availableCameras();
     if (cameras != null) {
-      controller = CameraController(cameras![0], ResolutionPreset.medium);
+      controller = CameraController(cameras![0], ResolutionPreset.high);
       await controller!.initialize();
       setState(() {});
     } else {
@@ -44,17 +47,18 @@ class _CameraState extends State<Camera> {
     final XFile? pickedFile =
         await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      navigateToProcessImage(pickedFile.path);
+      navigateToProcessImage(pickedFile);
     }
   }
 
   Future<void> getImageFromCamera() async {
     final XFile pickedFile = await controller!.takePicture();
-    navigateToProcessImage(pickedFile.path);
+    navigateToProcessImage(pickedFile);
+    print(pickedFile);
   }
 
-  void navigateToProcessImage(String imagePath) {
-    Navigator.pushNamed(context, '/process_image', arguments: imagePath);
+  void navigateToProcessImage(XFile image) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProcessImage(image: File(image.path))));
   }
 
   @override

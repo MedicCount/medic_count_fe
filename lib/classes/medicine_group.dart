@@ -17,7 +17,7 @@ class MedicineGroup {
 
   void copy(MedicineGroup source) {
     _name = source._name;
-    _medicineGroup = source._medicineGroup;
+    _medicineGroup = List.from(source._medicineGroup);
     _timestamp = source._timestamp;
   }
 
@@ -29,12 +29,20 @@ class MedicineGroup {
     _medicineGroup.removeWhere((element) => element == medicine);
   }
 
+  void deleteAllMedicineAndGroup() {
+    _medicineGroup.clear();
+  }
+
   set setTimeStamp(DateTime timestamp) {
     _timestamp = timestamp;
   }
 
   set setName(String name) {
     _name = name;
+  }
+
+  set setMedicineGroup(MedicineGroup medicineGroup) {
+    _medicineGroup = medicineGroup.getMedicineGroup;
   }
 
   String get getName => _name;

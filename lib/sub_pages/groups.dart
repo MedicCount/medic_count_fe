@@ -63,7 +63,8 @@ class _GroupsPageState extends State<GroupsPage> {
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: BaseButton(
                 function: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Camera()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const Camera()));
                 },
                 label: 'Add New',
               ),
@@ -212,13 +213,20 @@ class _GroupsPageState extends State<GroupsPage> {
                                   TableCellVerticalAlignment.middle,
                               child: IconButton(
                                 icon: const Icon(Icons.edit),
-                                onPressed: () {},
+                                onPressed: () {
+                                  _showEditPopup(context, medicine);
+                                },
                               ),
                             ),
-                            const TableCell(
+                            TableCell(
                               verticalAlignment:
                                   TableCellVerticalAlignment.middle,
-                              child: Icon(Icons.remove_circle_outline_outlined),
+                              child: IconButton(
+                                icon: const Icon(Icons.remove_circle_outline_outlined),
+                                onPressed: () {
+                                  _showDeleteDialog(context, medicine);
+                                },
+                              ),
                             ),
                             const TableCell(
                               verticalAlignment:
@@ -250,6 +258,95 @@ class _GroupsPageState extends State<GroupsPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showEditPopup(BuildContext context, Medicine medicine) {
+    TextEditingController nameController =
+        TextEditingController(text: medicine.getName);
+    TextEditingController countController =
+        TextEditingController(text: medicine.getCount.toString());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Medicine'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                decoration: const InputDecoration(labelText: 'Name'),
+                controller: nameController,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Count'),
+                controller: countController,
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SecondaryButton(
+                  function: () {
+                    Navigator.of(context).pop();
+                  },
+                  label: 'Cancel',
+                ),
+                const SizedBox(width: 20),
+                BaseButton(
+                  function: () {
+                    setState(() {
+                      medicine.setName = nameController.text;
+                      medicine.setCount = int.tryParse(countController.text) ?? 0;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  label: 'Save',
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, Medicine medicine) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Medicine'),
+          content: Text('Are you sure you want to delete ${medicine.getName}?'),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SecondaryButton(
+                  function: () {
+                    Navigator.of(context).pop();
+                  },
+                  label: 'Cancel',
+                ),
+                const SizedBox(width: 20),
+                BaseButton(
+                  function: () {
+                    setState(() {
+                      medicineGroups[0].removeMedicine(medicine);
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  label: 'Delete',
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }
