@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:medic_count_fe/classes/medicine.dart';
@@ -22,8 +23,10 @@ class AllDatas {
   }
 
   Future<void> fetchAllData() async {
-    fetchAllMedicineGroups();
-    fetchAllMedicines();
+    // Navigator.of(context).push()
+
+    await fetchAllMedicineGroups();
+    await fetchAllMedicines();
 
     for (MedicineGroup medicineGroup in allMedicineGroups) {
       for (Medicine medicine in allMedicines) {

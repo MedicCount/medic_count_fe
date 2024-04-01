@@ -6,10 +6,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/pages/process_image.dart';
 
+import '../classes/medicine.dart';
+
+// ignore: must_be_immutable
 class Camera extends StatefulWidget {
   final String? mgid;
+  List<Medicine> medicines;
+  Function reloadPage;
 
-  const Camera({Key? key, this.mgid}) : super(key: key);
+  Camera({Key? key, this.mgid, required this.medicines, required this.reloadPage}) : super(key: key);
 
   @override
   State<Camera> createState() => _CameraState();
@@ -19,7 +24,6 @@ class _CameraState extends State<Camera> {
   List<CameraDescription>? cameras;
   late CameraImage cameraImage;
   CameraController? controller;
-
   final picker = ImagePicker();
 
   @override
@@ -63,6 +67,8 @@ class _CameraState extends State<Camera> {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProcessImage(
       image: File(image.path),
       mgid: widget.mgid,
+      medicines: widget.medicines,
+      reloadPage: widget.reloadPage,
     )));
   }
 

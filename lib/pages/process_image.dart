@@ -9,14 +9,23 @@ import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/components/buttons.dart';
+import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/pages/home.dart';
 import 'package:path/path.dart';
 
 class ProcessImage extends StatefulWidget {
   final File image;
-  final String? mgid;
+  String? mgid;
+  final List<Medicine> medicines;
+  final Function reloadPage;
 
-  const ProcessImage({Key? key, required this.image, this.mgid}) : super(key: key);
+  ProcessImage(
+      {Key? key,
+      required this.image,
+      this.mgid,
+      required this.medicines,
+      required this.reloadPage})
+      : super(key: key);
 
   @override
   State<ProcessImage> createState() => _ProcessImageState();
@@ -24,7 +33,6 @@ class ProcessImage extends StatefulWidget {
 
 class _ProcessImageState extends State<ProcessImage> {
   late String mid;
-  late final String mgid;
 
   late File _croppedImage;
   late Medicine medicine;
@@ -47,13 +55,13 @@ class _ProcessImageState extends State<ProcessImage> {
       ],
       uiSettings: [
         AndroidUiSettings(
-          toolbarTitle: 'Cropper',
-          toolbarColor: const Color(0xFF8000FF),
-          activeControlsWidgetColor: const Color(0xFF8000FF),
-          statusBarColor: const Color(0xFF8000FF),
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false),
+            toolbarTitle: 'Cropper',
+            toolbarColor: const Color(0xFF8000FF),
+            activeControlsWidgetColor: const Color(0xFF8000FF),
+            statusBarColor: const Color(0xFF8000FF),
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
         IOSUiSettings(
           title: 'Cropper',
         ),
@@ -74,19 +82,18 @@ class _ProcessImageState extends State<ProcessImage> {
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
     var stream = http.ByteStream(Stream.castFrom(_croppedImage.openRead()));
     var length = await _croppedImage.length();
-    var multipartFile = http.MultipartFile('file', stream, length, filename: basename(_croppedImage.path));
+    var multipartFile = http.MultipartFile('file', stream, length,
+        filename: basename(_croppedImage.path));
     request.files.add(multipartFile);
     request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
     if (widget.mgid != null) {
-      request.fields['mgid'] = mgid;
+      request.fields['mgid'] = widget.mgid!;
     }
     var response = await request.send();
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
       mid = jsonDecode(responseBody)['firestore']['medicine'];
-      if (widget.mgid == null) {
-        mgid = jsonDecode(responseBody)['firestore']['medicineGroup'];
-      }
+      widget.mgid ??= jsonDecode(responseBody)['firestore']['medicineGroup'];
     } else {
       print('Failed to upload image. Error code: ${response.statusCode}');
     }
@@ -100,24 +107,33 @@ class _ProcessImageState extends State<ProcessImage> {
     var response = await request.send();
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
-      medicine = Medicine.fromJson(jsonDecode(responseBody)['medicine'] as Map<String, dynamic>);
+      medicine = Medicine.fromJson(
+          jsonDecode(responseBody)['medicine'] as Map<String, dynamic>);
       print('Medicine fetch successfully');
     } else {
-      print('Failed to fetch medicine groups. Error code: ${response.statusCode}');
+      print(
+          'Failed to fetch medicine groups. Error code: ${response.statusCode}');
     }
   }
 
   Future<void> _modifyToGroup(String name, int counts) async {
     String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/update_medicine/';
-    var request = http.MultipartRequest('PUT', Uri.parse(apiUrl));
-    request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
-    request.fields['mid'] = mid;
+    Uri uri = Uri.parse(apiUrl);
+    Uri modifiedUri = uri.replace(queryParameters: {
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'mid': mid,
+    });
 
+    var request = http.MultipartRequest('PUT', modifiedUri);
     Map<String, dynamic> jsonPayload = {
       "counts": counts,
       "name": name,
       "groupId": medicine.getGroupId,
       "labels": medicine.getLabels,
+      // "counts": 100,
+      // "name": "Yes",
+      // "groupId": "Test",
+      // "labels": [],
     };
 
     request.fields['jsonPayload'] = jsonEncode(jsonPayload);
@@ -126,7 +142,7 @@ class _ProcessImageState extends State<ProcessImage> {
       String responseBody = await response.stream.bytesToString();
       print(responseBody);
     } else {
-      print('Failed to upload image. Error code: ${response.statusCode}');
+      print('Failed to modify image. Error code: ${response.statusCode}');
     }
   }
 
@@ -134,7 +150,8 @@ class _ProcessImageState extends State<ProcessImage> {
   Widget build(BuildContext context) {
     void addMedicineInGroup() {
       TextEditingController medicineNameController = TextEditingController();
-      TextEditingController medicineTotalCountController = TextEditingController();
+      TextEditingController medicineTotalCountController =
+          TextEditingController();
 
       showDialog(
         context: context,
@@ -152,49 +169,48 @@ class _ProcessImageState extends State<ProcessImage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text(
-                      'Medicine Name',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text(
+                        'Medicine Name',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    TextField(
-                      controller: medicineNameController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter medicine name',
-                        border: OutlineInputBorder(),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: medicineNameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter medicine name',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
-                    ),
-                  ]
-                ),
+                    ]),
                 const SizedBox(height: 15),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text(
-                      'Total Counts',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text(
+                        'Total Counts',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    TextField(
-                      controller: medicineTotalCountController..text = medicine.getCount.toString(),
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter total counts',
-                        border: OutlineInputBorder(),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: medicineTotalCountController
+                          ..text = medicine.getCount.toString(),
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter total counts',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
-                    ),
-                  ]
-                ),
+                    ]),
               ],
             ),
           ),
@@ -208,10 +224,11 @@ class _ProcessImageState extends State<ProcessImage> {
                       medicineNameController.text.trim(),
                       int.parse(medicineTotalCountController.text.trim()),
                     );
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                      ModalRoute.withName('/home'),
-                    );
+                    widget.medicines.add(medicine);
+                    widget.reloadPage();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                   label: 'Confirm',
                 ),

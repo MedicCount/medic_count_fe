@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
-import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/buttons.dart';
-import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/pages/camera.dart';
 
 class GroupsPage extends StatefulWidget {
@@ -14,7 +12,7 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
-  final List<MedicineGroup> medicineGroups = AllDatas().allMedicineGroups;
+  final List<Medicine> medicineGroups = [];
   final List<String> sortOptions = ['Name', 'Date Created'];
 
   final ScrollController _scrollController = ScrollController();
@@ -23,6 +21,10 @@ class _GroupsPageState extends State<GroupsPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void reloadPage() {
+    setState(() {});
   }
 
   @override
@@ -63,7 +65,10 @@ class _GroupsPageState extends State<GroupsPage> {
               child: BaseButton(
                 function: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const Camera()));
+                    MaterialPageRoute(builder: (context) => Camera(
+                      reloadPage: reloadPage,
+                      medicines: medicineGroups,
+                    )));
                 },
                 label: 'Add New',
               ),
@@ -150,11 +155,7 @@ class _GroupsPageState extends State<GroupsPage> {
                     },
                     children: <TableRow>[
                       if (medicineGroups.isNotEmpty)
-                        for (final Medicine medicine
-                            in medicineGroups[0].getMedicineGroup +
-                                medicineGroups[0].getMedicineGroup +
-                                medicineGroups[0].getMedicineGroup +
-                                medicineGroups[0].getMedicineGroup)
+                        for (final Medicine medicine in medicineGroups)
                           TableRow(
                             children: <Widget>[
                               TableCell(
@@ -336,7 +337,7 @@ class _GroupsPageState extends State<GroupsPage> {
                 BaseButton(
                   function: () {
                     setState(() {
-                      medicineGroups[0].removeMedicine(medicine);
+                      medicineGroups.removeWhere((element) => element == medicine);
                     });
                     Navigator.of(context).pop();
                   },

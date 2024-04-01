@@ -38,6 +38,10 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
     widget.medicineGroups.setMedicineGroup = _tempMedicineGroup;
   }
 
+  void reloadPage() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +93,9 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                 child: BaseButton(
                   function: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Camera(
+                      medicines: _tempMedicineGroup.getMedicineGroup,
                       mgid: widget.medicineGroups.getMgid,
+                      reloadPage: reloadPage,
                     )));
                   },
                   label: 'Add New',
