@@ -48,17 +48,17 @@ class MedicineGroup {
     _medicineGroup = medicineGroup.getMedicineGroup;
   }
 
-  String get getMid => _mgid;
+  String get getMgid => _mgid;
   String get getName => _name;
   List<Medicine> get getMedicineGroup => _medicineGroup;
   DateTime get getTimestamp => _timestamp;
 
   factory MedicineGroup.fromJson(Map<String, dynamic> json) {
     return MedicineGroup.withTimestamp(
-      json['medicineList']['_mgid'],
-      json['medicineList']['groupName'],
+      json['_mgid'],
+      json['groupName'],
       [],
-      json['medicineList']['createdDate'],
+      DateTime.parse(json['createdDate']),
     );
   }
 }

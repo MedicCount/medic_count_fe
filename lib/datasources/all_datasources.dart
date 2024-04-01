@@ -8,10 +8,11 @@ import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
 
 class AllDatas {
-  late List<MedicineGroup> allMedicineGroups;
+  List<MedicineGroup> allMedicineGroups = [];
+  List<Medicine> allMedicines = [];
 
   AllDatas._privateConstructor() {
-    _initialize();
+    fetchAllData();
   }
 
   static final AllDatas _instance = AllDatas._privateConstructor();
@@ -20,13 +21,20 @@ class AllDatas {
     return _instance;
   }
 
-  void _initialize() {
-    _fetchAllMedicineGroups();
-    _fetchAllMedicines();
-    allMedicineGroups = fetchMedicineGroups();
+  Future<void> fetchAllData() async {
+    fetchAllMedicineGroups();
+    fetchAllMedicines();
+
+    for (MedicineGroup medicineGroup in allMedicineGroups) {
+      for (Medicine medicine in allMedicines) {
+        if (medicine.getGroupId == medicineGroup.getMgid) {
+          medicineGroup.addMedicine(medicine);
+        }
+      }
+    }
   }
 
-  Future<List<MedicineGroup>?> _fetchAllMedicineGroups() async {
+  Future<void> fetchAllMedicineGroups() async {
     String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/get_all_medicine_groups/';
     var request = http.MultipartRequest('GET', Uri.parse(apiUrl));
     request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
@@ -34,7 +42,7 @@ class AllDatas {
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
       for (dynamic object in jsonDecode(responseBody)['medicineGroupList']) {
-        allMedicineGroups.add(MedicineGroup.fromJson(jsonDecode(object) as Map<String, dynamic>));
+        allMedicineGroups.add(MedicineGroup.fromJson(object as Map<String, dynamic>));
       }
       print('Medicine groups fetch successfully');
     } else {
@@ -42,9 +50,7 @@ class AllDatas {
     }
   }
 
-  Future<List<Medicine>?> _fetchAllMedicines() async {
-    List<Medicine> medicines = [];
-
+  Future<void> fetchAllMedicines() async {
     String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/get_all_medicines/';
     var request = http.MultipartRequest('GET', Uri.parse(apiUrl));
     request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
@@ -52,19 +58,12 @@ class AllDatas {
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
       for (dynamic object in jsonDecode(responseBody)['medicineList']) {
-        medicines.add(Medicine.fromJson(jsonDecode(object) as Map<String, dynamic>));
+        allMedicines.add(Medicine.fromJson(object as Map<String, dynamic>));
       }
       print('Medicine fetch successfully');
-      return medicines;
     } else {
       print('Failed to fetch medicine. Error code: ${response.statusCode}');
-      return null;
     }
-  }
-
-  List<MedicineGroup> fetchMedicineGroups() {
-    // implement method here
-    return [];
   }
 }
 
