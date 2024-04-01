@@ -14,8 +14,7 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
-  final List<MedicineGroup> medicineGroups =
-      TemporaryAllDatas().allMedicineGroups;
+  final List<MedicineGroup> medicineGroups = AllDatas().allMedicineGroups;
   final List<String> sortOptions = ['Name', 'Date Created'];
 
   final ScrollController _scrollController = ScrollController();
@@ -64,7 +63,9 @@ class _GroupsPageState extends State<GroupsPage> {
               child: BaseButton(
                 function: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const Camera()));
+                    MaterialPageRoute(builder: (context) => const Camera(
+                      mid: "None",
+                    )));
                 },
                 label: 'Add New',
               ),
@@ -150,91 +151,92 @@ class _GroupsPageState extends State<GroupsPage> {
                       5: FlexColumnWidth(0.1),
                     },
                     children: <TableRow>[
-                      for (final Medicine medicine
-                          in medicineGroups[0].getMedicineGroup +
-                              medicineGroups[0].getMedicineGroup +
-                              medicineGroups[0].getMedicineGroup +
-                              medicineGroups[0].getMedicineGroup)
-                        TableRow(
-                          children: <Widget>[
-                            TableCell(
-                              verticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              child: Row(
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: Icon(
-                                      Icons.circle,
-                                      size: 8,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Text(
-                                        medicine.getName,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
+                      if (medicineGroups.isNotEmpty)
+                        for (final Medicine medicine
+                            in medicineGroups[0].getMedicineGroup +
+                                medicineGroups[0].getMedicineGroup +
+                                medicineGroups[0].getMedicineGroup +
+                                medicineGroups[0].getMedicineGroup)
+                          TableRow(
+                            children: <Widget>[
+                              TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: Row(
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      child: Icon(
+                                        Icons.circle,
+                                        size: 8,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            TableCell(
-                              verticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Text(
-                                  NumberFormat('#,##0')
-                                      .format(medicine.getCount),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Text(
+                                          medicine.getName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                            const TableCell(
-                              verticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              child: Icon(Icons.image),
-                            ),
-                            TableCell(
-                              verticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              child: IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  _showEditPopup(context, medicine);
-                                },
+                              TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    NumberFormat('#,##0')
+                                        .format(medicine.getCount),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ),
-                            ),
-                            TableCell(
-                              verticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              child: IconButton(
-                                icon: const Icon(Icons.remove_circle_outline_outlined),
-                                onPressed: () {
-                                  _showDeleteDialog(context, medicine);
-                                },
+                              const TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: Icon(Icons.image),
                               ),
-                            ),
-                            const TableCell(
-                              verticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              child: SizedBox(),
-                            ),
-                          ],
-                        ),
+                              TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () {
+                                    _showEditPopup(context, medicine);
+                                  },
+                                ),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: IconButton(
+                                  icon: const Icon(Icons.remove_circle_outline_outlined),
+                                  onPressed: () {
+                                    _showDeleteDialog(context, medicine);
+                                  },
+                                ),
+                              ),
+                              const TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: SizedBox(),
+                              ),
+                            ],
+                          ),
                     ],
                   ),
                 ),

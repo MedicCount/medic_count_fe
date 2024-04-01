@@ -1,16 +1,16 @@
 import 'dart:io';
 
 class Medicine {
-  final String _id;
+  final String _groupId;
   String _name;
-  File _image;
+  File? _image;
   late int _counts;
 
-  Medicine(this._id, this._name, this._image) {
+  Medicine(this._groupId, this._name, this._image) {
     _counts = 0;
   }
 
-  Medicine.withCount(this._id, this._name, this._image, this._counts);
+  Medicine.withCount(this._groupId, this._name, this._image, this._counts);
 
   void increaseCount(int amount) {
     _counts += amount;
@@ -32,8 +32,17 @@ class Medicine {
     _counts = counts;
   }
 
-  String get getId => _id;
+  String get getGroupId => _groupId;
   String get getName => _name;
-  File get getImage => _image;
+  File get getImage => _image!;
   int get getCount => _counts;
+
+  factory Medicine.fromJson(Map<String, dynamic> json) {
+    return Medicine.withCount(
+      json['groupId'],
+      json['name'],
+      File(json['_image']),
+      json['counts'],
+    );
+  }
 }

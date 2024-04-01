@@ -1,16 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
+import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:path/path.dart';
 
 class ProcessImage extends StatefulWidget {
+  final String mid;
   final File image;
 
-  const ProcessImage({Key? key, required this.image}) : super(key: key);
+  const ProcessImage({Key? key, required this.image, required this.mid}) : super(key: key);
 
   @override
   State<ProcessImage> createState() => _ProcessImageState();
@@ -18,10 +22,12 @@ class ProcessImage extends StatefulWidget {
 
 class _ProcessImageState extends State<ProcessImage> {
   late File _croppedImage;
+  late Medicine medicine;
 
   @override
   void initState() {
     super.initState();
+    _receiveImage();
     _croppedImage = widget.image;
   }
 
@@ -60,7 +66,7 @@ class _ProcessImageState extends State<ProcessImage> {
   }
 
   Future<void> _sendImage() async {
-    const String apiUrl = 'https://homeless-incorrect-q-donated.trycloudflare.com/detect/';
+    String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/detect/';
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
     var stream = http.ByteStream(Stream.castFrom(_croppedImage.openRead()));
     var length = await _croppedImage.length();
@@ -72,6 +78,21 @@ class _ProcessImageState extends State<ProcessImage> {
       print('Image uploaded successfully');
     } else {
       print('Failed to upload image. Error code: ${response.statusCode}');
+    }
+  }
+
+  Future<void> _receiveImage() async {
+    String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/get_all_medicines/';
+    var request = http.MultipartRequest('GET', Uri.parse(apiUrl));
+    request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      print(jsonDecode(responseBody));
+      medicine =  Medicine.fromJson(jsonDecode(responseBody) as Map<String, dynamic>);
+      print('Image receive successfully');
+    } else {
+      print('Failed to recieve image. Error code: ${response.statusCode}');
     }
   }
 
