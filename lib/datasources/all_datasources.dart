@@ -2,29 +2,32 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
 
-class AllDatas {
+class AllDatas with ChangeNotifier {
+  static final AllDatas allDatas = AllDatas._internal();
+  AllDatas._internal();
+
   List<MedicineGroup> allMedicineGroups = [];
   List<Medicine> allMedicines = [];
 
-  AllDatas._privateConstructor() {
-    fetchAllData();
+  static Future<AllDatas> create() async {
+    var instance = AllDatas._internal();
+    await instance._fetchData();
+    return instance;
   }
 
-  static final AllDatas _instance = AllDatas._privateConstructor();
+  Future<void> _fetchData() async {
+    await Future.wait([
+      fetchAllMedicineGroups(),
+      fetchAllMedicines(),
+    ]);
 
-  factory AllDatas() {
-    return _instance;
-  }
-
-  Future<void> fetchAllData() async {
-    fetchAllMedicineGroups();
-    fetchAllMedicines();
-
+    // Process data after fetching
     for (MedicineGroup medicineGroup in allMedicineGroups) {
       for (Medicine medicine in allMedicines) {
         if (medicine.getGroupId == medicineGroup.getMgid) {
@@ -67,7 +70,7 @@ class AllDatas {
   }
 }
 
-class TemporaryAllDatas {
+class TemporaryAllDatas with ChangeNotifier {
   late List<MedicineGroup> allMedicineGroups;
 
   TemporaryAllDatas._privateConstructor() {

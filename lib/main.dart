@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/firebase_options.dart';
-import 'package:medic_count_fe/pages/loading.dart';
+import 'package:medic_count_fe/pages/home.dart';
 import 'package:medic_count_fe/pages/not_found.dart';
 import 'package:medic_count_fe/pages/prepage.dart';
 
@@ -16,9 +17,7 @@ Future<void> main() async {
 }
 
 Future<void> initializeFirebase() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
 class MyApp extends StatefulWidget {
@@ -55,7 +54,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/home':
-            return _checkAuthAndRoute(LoadingPage());
+            return _checkAuthAndRoute(const HomePage());
           case '/pre':
             return MaterialPageRoute(builder: (_) => const PrePage());
           default:
@@ -106,7 +105,7 @@ class AuthCheck extends StatelessWidget {
           );
         } else {
           if (snapshot.hasData) {
-            return LoadingPage();
+            return HomePage();
           } else {
             return const PrePage();
           }

@@ -45,7 +45,7 @@ class _MedicineGroupDisplayState extends State<MedicineGroupDisplay> {
               const SizedBox(width: 20),
               BaseButton(
                 function: () {
-                  AllDatas().allMedicineGroups.removeWhere((item) => item == widget.medicineGroup);
+                  TemporaryAllDatas().allMedicineGroups.removeWhere((item) => item == widget.medicineGroup);
                   widget.onDelete();
                   Navigator.of(context).pop();
                 },
