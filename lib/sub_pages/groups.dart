@@ -14,17 +14,10 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
-  late final List<MedicineGroup> medicineGroups = TemporaryAllDatas().allMedicineGroups;
+  final List<MedicineGroup> medicineGroups = AllDatas().allMedicineGroups;
   final List<String> sortOptions = ['Name', 'Date Created'];
 
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  Future<void> initialize() async {
-    // AllDatas allDatas = await AllDatas.create();
-    // medicineGroups = allDatas.allMedicineGroups;
-    super.initState();
-  }
 
   @override
   void dispose() {

@@ -3,7 +3,6 @@ import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/medicine_group_display.dart';
 import 'package:medic_count_fe/datasources/all_datasources.dart';
-import 'package:provider/provider.dart';
 
 class CountedPage extends StatefulWidget {
   const CountedPage({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class CountedPage extends StatefulWidget {
 }
 
 class _CountedPageState extends State<CountedPage> {
-  late List<MedicineGroup> allMedicineGroups = TemporaryAllDatas().allMedicineGroups;
+  List<MedicineGroup> allMedicineGroups = AllDatas().allMedicineGroups;
   List<MedicineGroup> filteredMedicineGroups = [];
   final List<String> sortOptions = ['Name', 'Date Created'];
   late String _selectedValue;
@@ -21,9 +20,7 @@ class _CountedPageState extends State<CountedPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
-  Future<void> initState() async {
-    // AllDatas allDatas = await AllDatas.create();
-    // allMedicineGroups = allDatas.allMedicineGroups;
+  void initState() {
     super.initState();
     _selectedValue = sortOptions[0];
     _selectedOrder = 'Ascending';
@@ -61,7 +58,8 @@ class _CountedPageState extends State<CountedPage> {
       if (_selectedValue == 'Name') {
         filteredMedicineGroups.sort((a, b) => a.getName.compareTo(b.getName));
       } else if (_selectedValue == 'Date Created') {
-        filteredMedicineGroups.sort((a, b) => a.getTimestamp.compareTo(b.getTimestamp));
+        filteredMedicineGroups
+            .sort((a, b) => a.getTimestamp.compareTo(b.getTimestamp));
       }
 
       if (_selectedOrder == 'Descending') {
@@ -84,93 +82,92 @@ class _CountedPageState extends State<CountedPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: searchController,
-              onChanged: (value) {
-                filterSearchResults(value.trim());
-              },
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
-              ),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: searchController,
+            onChanged: (value) {
+              filterSearchResults(value.trim());
+            },
+            decoration: const InputDecoration(
+              labelText: 'Search',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.search),
             ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Text(
-                  'Sort by',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              const Text(
+                'Sort by',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(width: 10),
+              DropdownButton<String>(
+                value: _selectedValue,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedValue = newValue!;
+                    sortMedicineGroups();
+                  });
+                },
+                items:
+                    sortOptions.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(width: 10),
+              DropdownButton<String>(
+                value: _selectedOrder,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedOrder = newValue!;
+                    sortMedicineGroups();
+                  });
+                },
+                items: ['Ascending', 'Descending']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Expanded(
+            child: Scrollbar(
+              thickness: 5,
+              thumbVisibility: true,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children:
+                        List.generate(filteredMedicineGroups.length, (index) {
+                      MedicineGroup temp = filteredMedicineGroups[index];
+                      return MedicineGroupDisplay(
+                        groupName: temp.getName,
+                        timeCreated: temp.getTimestamp,
+                        medicineGroup: temp,
+                        onDelete: () => handleDelete(temp),
+                        onUpdate: () => handleUpdate(temp),
+                      );
+                    }),
                   ),
                 ),
-                const SizedBox(width: 10),
-                DropdownButton<String>(
-                  value: _selectedValue,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedValue = newValue!;
-                      sortMedicineGroups();
-                    });
-                  },
-                  items: sortOptions.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(width: 10),
-                DropdownButton<String>(
-                  value: _selectedOrder,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedOrder = newValue!;
-                      sortMedicineGroups();
-                    });
-                  },
-                  items: ['Ascending', 'Descending'].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Expanded(
-              child: Scrollbar(
-                thickness: 5,
-                thumbVisibility: true,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(filteredMedicineGroups.length, (index) {
-                        MedicineGroup temp = filteredMedicineGroups[index];
-                        return MedicineGroupDisplay(
-                          groupName: temp.getName,
-                          timeCreated: temp.getTimestamp,
-                          medicineGroup: temp,
-                          onDelete: () => handleDelete(temp),
-                          onUpdate: () => handleUpdate(temp),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
