@@ -5,7 +5,7 @@ class MedicineGroup {
   late List<Medicine> _medicineGroup;
   late DateTime _timestamp;
   
-  MedicineGroup(this._name, this._medicineGroup) {
+  MedicineGroup(this._name, this._medicineGroup, List list) {
     _timestamp = DateTime.now();
   }
   
