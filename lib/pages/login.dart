@@ -6,7 +6,7 @@ import 'package:medic_count_fe/components/base_modal.dart';
 import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/pages/create_account.dart';
 import 'package:medic_count_fe/pages/forgot_password.dart';
-import 'package:medic_count_fe/pages/home.dart';
+import 'package:medic_count_fe/pages/loading.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                                     } else {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
-                                        builder: (context) => HomePage(),
+                                        builder: (context) => LoadingPage(),
                                       ));
                                     }
                                   }
@@ -257,7 +257,7 @@ class _LoginPageState extends State<LoginPage> {
                                   } else {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
-                                      builder: (context) => HomePage(),
+                                      builder: (context) => LoadingPage(),
                                     ));
                                   }
                                 }

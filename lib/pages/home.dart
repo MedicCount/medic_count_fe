@@ -15,15 +15,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int indexBottomNav = 0;
   List<Widget> widgetOption = [
-    const CountedPage(),
     const GroupsPage(),
+    const CountedPage(),
     const StatPage(),
     const SettingPage(),
   ];
 
   List<String> headerLabel = [
-    'Counted Medicines',
     'Create New Group',
+    'Counted Medicines',
     'Statistics',
     'Settings',
     'Edit Group'
