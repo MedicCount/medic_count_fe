@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medic_count_fe/classes/chart_data.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/base_doughnutChart.dart';
-import 'package:medic_count_fe/components/base_dropdown.dart';
 import 'package:medic_count_fe/components/base_lineChart.dart';
-import 'package:http/http.dart' as http;
 import 'package:medic_count_fe/datasources/all_datasources.dart';
 
 class StatPage extends StatefulWidget {
@@ -17,16 +14,42 @@ class StatPage extends StatefulWidget {
 }
 
 class _StatPageState extends State<StatPage> {
-
   @override
   Widget build(BuildContext context) {
-
-    
-    List<MedicineGroup> allMedicinegroups = AllDatas().allMedicineGroups;
+    List<MedicineGroup> allMedicineGroups = AllDatas().allMedicineGroups;
     List<Medicine> allMedicines = AllDatas().allMedicines;
 
-    print(allMedicinegroups.length);
-    print(FirebaseAuth.instance.currentUser!.uid);
+    Map<String, MapEntry<String, int>> eachGroupCount = {};
+
+    for (MedicineGroup mg in allMedicineGroups) {
+      for (Medicine m in allMedicines) {
+        if (m.getGroupId == mg.getMgid) {
+          if (eachGroupCount.containsKey(mg.getMgid)) {
+            eachGroupCount[mg.getMgid] = MapEntry(
+              mg.getName,
+              eachGroupCount[mg.getMgid]!.value + m.getCount,
+            );
+          } else {
+            eachGroupCount[mg.getMgid] = MapEntry(mg.getName, m.getCount);
+          }
+        }
+      }
+    }
+
+    // set default value for dropdown
+    String selectedGroup = "I4Ef4jWI73WwYm3GgUTC";
+    Map<String, int> eachMedicineCount = {};
+
+    for (Medicine m in allMedicines) {
+      if (m.getGroupId == selectedGroup) {
+        if (eachMedicineCount.containsKey(m.getName)) {
+          eachMedicineCount[m.getName] = eachMedicineCount[m.getName]! + m.getCount;
+        } else {
+          eachMedicineCount[m.getName] = m.getCount;
+        }
+      }
+    }
+
 
     return Center(
         child: Container(
@@ -54,10 +77,12 @@ class _StatPageState extends State<StatPage> {
             SizedBox(
                 height: 250,
                 child: Expanded(
-                    child: BaseLineChart(data: 
-                      allMedicinegroups.map((e) => ChartData(e.getName, 102)).toList(
-                    ))),
-            ),
+                    child: BaseLineChart(
+                        data: eachGroupCount.entries
+                            .map((e) => ChartData(
+                                e.value.key + ' (${e.value.value})',
+                                e.value.value))
+                            .toList()))),
             Container(
               margin: const EdgeInsets.only(top: 10, bottom: 10),
               child: Divider(
@@ -65,9 +90,9 @@ class _StatPageState extends State<StatPage> {
                 thickness: 2,
               ),
             ),
-            const Row(
+            Row(
               children: [
-                BaseDropdown(list: ['Group 1', 'Group 2', 'Group 3']),
+                
               ],
             ),
             Container(
@@ -78,12 +103,11 @@ class _StatPageState extends State<StatPage> {
                 child: SizedBox(
                     height: 200,
                     child: Expanded(
-                        child: BaseDoughnutChart(data: [
-                      ChartData('A', 25),
-                      ChartData('B', 25),
-                      ChartData('C', 25),
-                      ChartData('D', 25),
-                    ])))),
+                        child: BaseDoughnutChart(data: eachMedicineCount.entries
+                            .map((e) => ChartData(
+                                e.key,
+                                e.value))
+                            .toList())))),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -124,7 +148,8 @@ class _StatPageState extends State<StatPage> {
                             ),
                           ),
                         ),
-                      )),
+                      )
+                    ),
                 ),
               ),
             ),
