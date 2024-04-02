@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:medic_count_fe/classes/medicine.dart';
 
 class MedicineGroup {
@@ -59,5 +61,26 @@ class MedicineGroup {
       [],
       DateTime.parse(json['createdDate']),
     );
+  }
+
+  Future<void> modifyMedicineGroup() async {
+    
+  }
+
+  Future<void> deleteMedicineGroup() async {
+    var request = http.MultipartRequest('DELETE', Uri.parse('${dotenv.env['BACKEND_API_URL']!}/delete_medicine_group/'));
+    request.fields.addAll({
+      'uid': 'lygtQE3vATT4Ng3gUQSpt7tDsZD3',
+      'mgid': '0dabWZ8AoNYCCSTyDmgw'
+    });
+
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      _medicineGroup.clear;
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
   }
 }

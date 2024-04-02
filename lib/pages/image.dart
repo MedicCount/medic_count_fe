@@ -85,7 +85,7 @@ class _ShowImageState extends State<ShowImage> {
             ),
           ),
           content: SizedBox(
-            height: MediaQuery.of(context).size.height / 4.2,
+            height: MediaQuery.of(context).size.height / 8,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

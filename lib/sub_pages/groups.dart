@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
@@ -111,19 +113,19 @@ class _GroupsPageState extends State<GroupsPage> {
                     ),
                   ),
                   TableCell(
-                    verticalAlignment: TableCellVerticalAlignment.middle,
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        'Total Count',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
+                      verticalAlignment: TableCellVerticalAlignment.middle,
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          'Total Count',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   TableCell(
                     verticalAlignment: TableCellVerticalAlignment.middle,
                     child: SizedBox(width: 8),
@@ -208,10 +210,15 @@ class _GroupsPageState extends State<GroupsPage> {
                                   ),
                                 ),
                               ),
-                              const TableCell(
+                              TableCell(
                                 verticalAlignment:
                                     TableCellVerticalAlignment.middle,
-                                child: Icon(Icons.image),
+                                child: IconButton(
+                                  icon: const Icon(Icons.image),
+                                  onPressed: () {
+                                    _showImageAlert(context, medicine);
+                                  },
+                                ),
                               ),
                               TableCell(
                                 verticalAlignment:
@@ -339,10 +346,9 @@ class _GroupsPageState extends State<GroupsPage> {
                 ),
                 const SizedBox(width: 20),
                 BaseButton(
-                  function: () {
-                    setState(() {
-                      AllDatas().temporaryMedicinesFromCreateNewGrroup.removeWhere((element) => element == medicine);
-                    });
+                  function: () async {
+                    AllDatas().temporaryMedicineFromEditGroup.removeWhere((element) => element == medicine);
+                    await medicine.deleteMedicine();
                     Navigator.of(context).pop();
                   },
                   label: 'Delete',
@@ -350,6 +356,46 @@ class _GroupsPageState extends State<GroupsPage> {
               ],
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showImageAlert(BuildContext context, Medicine medicine) async {
+    Uint8List? bytes = await medicine.fetchImage();
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Medicine Image',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: bytes != null
+                ? Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
+                  )
+                : const SizedBox(),
+          ),
         );
       },
     );
