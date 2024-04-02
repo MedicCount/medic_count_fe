@@ -14,7 +14,7 @@ class StatPage extends StatefulWidget {
 }
 
 class _StatPageState extends State<StatPage> {
-  String? _selectedGroup;
+  late String _selectedGroup = '';
   late List<MedicineGroup> allMedicineGroups;
   late List<Medicine> allMedicines;
 
@@ -23,7 +23,7 @@ class _StatPageState extends State<StatPage> {
     super.initState();
     allMedicineGroups = AllDatas().allMedicineGroups;
     allMedicines = AllDatas().allMedicines;
-    if (!allMedicineGroups.isEmpty) {
+    if (allMedicineGroups.isNotEmpty) {
       _selectedGroup = allMedicineGroups[0].getMgid;
     }
   }
