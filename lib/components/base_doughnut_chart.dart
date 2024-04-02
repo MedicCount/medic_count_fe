@@ -10,16 +10,17 @@ class BaseDoughnutChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
+      child: SizedBox(
         height: 300,
         child: SfCircularChart(
-          legend: Legend(isVisible: true),
+          legend: const Legend(isVisible: true),
           series: <DoughnutSeries<ChartData, String>>[
             DoughnutSeries<ChartData, String>(
               dataSource: data,
               xValueMapper: (ChartData data, _) => data.category,
               yValueMapper: (ChartData data, _) => data.value,
-              dataLabelSettings: DataLabelSettings(isVisible: false), // Disable data labels
+              dataLabelMapper: (ChartData data, _) => '${data.category}: ${data.value} (${(data.value / data.total * 100).toStringAsFixed(2)}%)',
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
             )
           ],
         ),

@@ -10,18 +10,18 @@ class BaseLineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
+      child: SizedBox(
         height: 300,
         child: SfCartesianChart(
-          legend: Legend(isVisible: true),
-          primaryXAxis: CategoryAxis(),
+          legend: const Legend(isVisible: true),
+          primaryXAxis: const CategoryAxis(),
           series: <LineSeries<ChartData, String>>[
             LineSeries<ChartData, String>(
               isVisibleInLegend: false,
               dataSource: data,
               xValueMapper: (ChartData data, _) => data.category,
               yValueMapper: (ChartData data, _) => data.value,
-              dataLabelSettings: DataLabelSettings(isVisible: false), // Disable data labels
+              dataLabelSettings: const DataLabelSettings(isVisible: false),
             )
           ],
         ),

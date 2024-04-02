@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:medic_count_fe/classes/chart_data.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
-import 'package:medic_count_fe/components/base_doughnutChart.dart';
-import 'package:medic_count_fe/components/base_lineChart.dart';
+import 'package:medic_count_fe/components/base_doughnut_chart.dart';
+import 'package:medic_count_fe/components/base_line_chart.dart';
 import 'package:medic_count_fe/datasources/all_datasources.dart';
 
 class StatPage extends StatefulWidget {
@@ -47,58 +47,18 @@ class _StatPageState extends State<StatPage> {
       }
     }
 
-    // set default value for dropdown
     Map<String, int> eachMedicineCount = {};
-    if (allMedicines.isEmpty) {
-      for (Medicine m in allMedicines) {
-        if (m.getGroupId == _selectedGroup) {
-          if (eachMedicineCount.containsKey(m.getName)) {
-            eachMedicineCount[m.getName] =
-                eachMedicineCount[m.getName]! + m.getCount;
-          } else {
-            eachMedicineCount[m.getName] = m.getCount;
-          }
+    int totalCounts = 0;
+    for (Medicine m in allMedicines) {
+      if (m.getGroupId == _selectedGroup) {
+        totalCounts += m.getCount;
+        if (eachMedicineCount.containsKey(m.getName)) {
+          eachMedicineCount[m.getName] =
+              eachMedicineCount[m.getName]! + m.getCount;
+        } else {
+          eachMedicineCount[m.getName] = m.getCount;
         }
       }
-    }
-
-    Widget medicineCard(String name, int counts) {
-      return Container(
-        margin: const EdgeInsets.only(top: 10, bottom: 10),
-        child: SizedBox(
-          width: 160,
-          child: Card(
-            color: Theme.of(context).colorScheme.secondary,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(name),
-                    ],
-                  ),
-                  Divider(
-                    color: Theme.of(context).colorScheme.primary,
-                    thickness: 2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Icon(Icons.image),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        width: 50,
-                        child: Text('$counts'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
     }
 
     return Column(
@@ -133,7 +93,13 @@ class _StatPageState extends State<StatPage> {
                           (MedicineGroup group) {
                             return DropdownMenuItem<String>(
                               value: group.getMgid,
-                              child: Text(group.getName),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 3,
+                                child: Text(
+                                  group.getName,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             );
                           },
                         ).toList(),
@@ -151,17 +117,9 @@ class _StatPageState extends State<StatPage> {
                     height: MediaQuery.of(context).size.height / 3.5,
                     child: BaseDoughnutChart(
                       data: eachMedicineCount.entries
-                        .map((e) => ChartData(e.key, e.value))
+                        .map((e) => ChartData(e.key, e.value, totalCounts))
                         .toList(),
                     ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: eachMedicineCount.entries
-                        .map((e) => medicineCard(e.key, e.value))
-                        .toList(),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -185,6 +143,7 @@ class _StatPageState extends State<StatPage> {
                           (e) => ChartData(
                             '${e.value.key} (${e.value.value})',
                             e.value.value,
+                            totalCounts
                           ),
                         )
                         .toList(),
