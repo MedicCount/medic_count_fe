@@ -1,10 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:medic_count_fe/classes/chart_data.dart';
+import 'package:medic_count_fe/classes/medicine.dart';
+import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/base_doughnutChart.dart';
 import 'package:medic_count_fe/components/base_dropdown.dart';
 import 'package:medic_count_fe/components/base_lineChart.dart';
+import 'package:http/http.dart' as http;
+import 'package:medic_count_fe/datasources/all_datasources.dart';
 
 class StatPage extends StatefulWidget {
   const StatPage({super.key});
@@ -14,8 +17,17 @@ class StatPage extends StatefulWidget {
 }
 
 class _StatPageState extends State<StatPage> {
+
   @override
   Widget build(BuildContext context) {
+
+    
+    List<MedicineGroup> allMedicinegroups = AllDatas().allMedicineGroups;
+    List<Medicine> allMedicines = AllDatas().allMedicines;
+
+    print(allMedicinegroups.length);
+    print(FirebaseAuth.instance.currentUser!.uid);
+
     return Center(
         child: Container(
       margin: const EdgeInsets.all(20),
@@ -42,14 +54,12 @@ class _StatPageState extends State<StatPage> {
             SizedBox(
                 height: 250,
                 child: Expanded(
-                    child: BaseLineChart(data: [
-                  ChartData('A', 10),
-                  ChartData('B', 14),
-                  ChartData('C', 6),
-                  ChartData('D', 20),
-                ]))),
+                    child: BaseLineChart(data: 
+                      allMedicinegroups.map((e) => ChartData(e.getName, 102)).toList(
+                    ))),
+            ),
             Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10),
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
               child: Divider(
                 color: Theme.of(context).colorScheme.secondary,
                 thickness: 2,
@@ -77,42 +87,44 @@ class _StatPageState extends State<StatPage> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: List.generate(5, (index) => 
-                  Container(
-                    margin: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Container(
-                      width: 160,
-                      child: Card(
-                        color: Theme.of(context).colorScheme.secondary,
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text('Group $index'),
-                                ],
-                              ),
-                              Divider(
-                                color: Theme.of(context).colorScheme.primary,
-                                thickness: 2,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(Icons.image),
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    width: 50,
-                                    child: Expanded(child: Text('1000')))
-                                ],
-                              ),
-                            ],
+                children: List.generate(
+                  5,
+                  (index) => Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Container(
+                        width: 160,
+                        child: Card(
+                          color: Theme.of(context).colorScheme.secondary,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text('$index'),
+                                  ],
+                                ),
+                                Divider(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  thickness: 2,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Icon(Icons.image),
+                                    Container(
+                                        alignment: Alignment.centerRight,
+                                        width: 50,
+                                        child:
+                                            const Expanded(child: Text('1000')))
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ),
+                      )),
                 ),
               ),
             ),
