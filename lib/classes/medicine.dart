@@ -36,7 +36,6 @@ class Medicine {
     _counts = counts;
   }
 
-  String get getMid => _groupId;
   String get getGroupId => _groupId;
   String get getName => _name;
   File get getImage => _image!;
