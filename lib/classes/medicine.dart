@@ -1,4 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
 class Medicine {
   late String _mid;
@@ -14,7 +20,7 @@ class Medicine {
 
   Medicine.withCount(this._mid, this._groupId, this._name, this._image, this._counts);
 
-  Medicine.withCountwithLabel(this._groupId, this._name, this._image, this._counts, this.labels);
+  Medicine.withCountwithLabel(this._mid, this._groupId, this._name, this._image, this._counts, this.labels);
 
   void increaseCount(int amount) {
     _counts += amount;
@@ -45,11 +51,72 @@ class Medicine {
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
     return Medicine.withCountwithLabel(
+      json['_mid'],
       json['groupId'],
       json['name'],
       File(json['_image']),
       json['counts'],
       json['labels'],
     );
+  }
+
+  Future<Uint8List?> fetchImage() async {
+    String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/get_image/';
+    var request = http.MultipartRequest('GET', Uri.parse(apiUrl));
+    request.fields.addAll({
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'mid': _mid
+    });
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      return await response.stream.toBytes();
+    } else {
+      print(response.reasonPhrase);
+      return null;
+    }
+  }
+
+  Future<void> modifyMedicine(String name, int count) async {
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('PUT',
+      Uri.parse('${dotenv.env['BACKEND_API_URL']!}/update_medicine/${
+        FirebaseAuth.instance.currentUser!.uid
+      }/$_mid/'));
+    request.body = json.encode({
+      "counts": count,
+      "name": name,
+      "groupId": _groupId,
+      "lables": labels,
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      _name = name;
+      _counts = count;
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future<void> deleteMedicine() async {
+    var request = http.MultipartRequest('DELETE', Uri.parse('${dotenv.env['BACKEND_API_URL']!}/delete_medicine/'));
+    request.fields.addAll({
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'mid': _mid
+    });
+
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
   }
 }
