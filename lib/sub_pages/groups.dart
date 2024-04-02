@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/components/buttons.dart';
+import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/pages/camera.dart';
 
 class GroupsPage extends StatefulWidget {
@@ -12,9 +13,6 @@ class GroupsPage extends StatefulWidget {
 }
 
 class _GroupsPageState extends State<GroupsPage> {
-  final List<Medicine> medicineGroups = [];
-  final List<String> sortOptions = ['Name', 'Date Created'];
-
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -23,8 +21,13 @@ class _GroupsPageState extends State<GroupsPage> {
     super.dispose();
   }
 
-  void reloadPage() {
-    setState(() {});
+  void reloadPage(String? mgid) {
+    setState(() {
+      if (mgid != null) {
+        AllDatas().temporaryGroupId = mgid;
+        print("mgid: ${AllDatas().temporaryGroupId}");
+      }
+    });
   }
 
   @override
@@ -67,7 +70,8 @@ class _GroupsPageState extends State<GroupsPage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => Camera(
                       reloadPage: reloadPage,
-                      medicines: medicineGroups,
+                      medicines: AllDatas().temporaryMedicinesFromCreateNewGrroup,
+                      mgid: AllDatas().temporaryGroupId,
                     )));
                 },
                 label: 'Add New',
@@ -154,8 +158,8 @@ class _GroupsPageState extends State<GroupsPage> {
                       5: FlexColumnWidth(0.1),
                     },
                     children: <TableRow>[
-                      if (medicineGroups.isNotEmpty)
-                        for (final Medicine medicine in medicineGroups)
+                      if (AllDatas().temporaryMedicinesFromCreateNewGrroup.isNotEmpty)
+                        for (final Medicine medicine in AllDatas().temporaryMedicinesFromCreateNewGrroup)
                           TableRow(
                             children: <Widget>[
                               TableCell(
@@ -337,7 +341,7 @@ class _GroupsPageState extends State<GroupsPage> {
                 BaseButton(
                   function: () {
                     setState(() {
-                      medicineGroups.removeWhere((element) => element == medicine);
+                      AllDatas().temporaryMedicinesFromCreateNewGrroup.removeWhere((element) => element == medicine);
                     });
                     Navigator.of(context).pop();
                   },

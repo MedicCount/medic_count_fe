@@ -11,6 +11,7 @@ class MedicineGroupDisplay extends StatefulWidget {
   final MedicineGroup medicineGroup;
   final Function() onUpdate;
   final Function() onDelete;
+  final Function() reloadPage;
 
   const MedicineGroupDisplay({
     Key? key,
@@ -19,6 +20,7 @@ class MedicineGroupDisplay extends StatefulWidget {
     required this.medicineGroup,
     required this.onUpdate,
     required this.onDelete,
+    required this.reloadPage
   }) : super(key: key);
 
   @override
@@ -154,6 +156,7 @@ class _MedicineGroupDisplayState extends State<MedicineGroupDisplay> {
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditGroupsPage(
                               medicineGroups: widget.medicineGroup,
+                              reloadPage: widget.reloadPage,
                             ))).then((value) => widget.onUpdate());
                           },
                         ),

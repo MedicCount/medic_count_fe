@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:medic_count_fe/datasources/all_datasources.dart';
-import 'package:medic_count_fe/pages/home.dart';
 
 class LoadingPage extends StatelessWidget {
+  const LoadingPage({super.key});
+
   void _fetchData(BuildContext context) async {
     await AllDatas().fetchAllData();
     await Future.delayed(const Duration(seconds: 2));
@@ -10,22 +11,28 @@ class LoadingPage extends StatelessWidget {
     bool apiSuccess = true;
 
     if (apiSuccess) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _fetchData(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Loading Page'),
       ),
-      body: const Center(
-        child: CircularProgressIndicator(),
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) {
+          if (didPop) {
+            return;
+          }
+          _fetchData(context);
+        },
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }

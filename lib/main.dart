@@ -1,13 +1,24 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_cropper/image_cropper.dart';
+import 'package:medic_count_fe/classes/medicine.dart';
+import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/firebase_options.dart';
 import 'package:medic_count_fe/pages/home.dart';
-import 'package:medic_count_fe/pages/loading.dart';
 import 'package:medic_count_fe/pages/not_found.dart';
 import 'package:medic_count_fe/pages/prepage.dart';
+import 'package:path/path.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -54,7 +65,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/home':
-            return _checkAuthAndRoute(LoadingPage());
+            return _checkAuthAndRoute(const HomePage());
           case '/pre':
             return MaterialPageRoute(builder: (_) => const PrePage());
           default:

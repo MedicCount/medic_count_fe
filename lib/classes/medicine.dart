@@ -5,7 +5,7 @@ class Medicine {
   String _name;
   File? _image;
   late int _counts;
-  late List<dynamic> labels;
+  List<dynamic> labels = [];
 
   Medicine(this._groupId, this._name, this._image) {
     _counts = 0;

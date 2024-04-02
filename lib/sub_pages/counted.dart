@@ -27,6 +27,10 @@ class _CountedPageState extends State<CountedPage> {
     filteredMedicineGroups.addAll(allMedicineGroups);
   }
 
+  void reloadPage() {
+    setState(() {});
+  }
+
   void filterSearchResults(String query) {
     if (query.isNotEmpty) {
       List<MedicineGroup> dummyListData = [];
@@ -160,6 +164,7 @@ class _CountedPageState extends State<CountedPage> {
                         medicineGroup: temp,
                         onDelete: () => handleDelete(temp),
                         onUpdate: () => handleUpdate(temp),
+                        reloadPage: reloadPage,
                       );
                     }),
                   ),

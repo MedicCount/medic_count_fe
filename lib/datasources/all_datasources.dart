@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:medic_count_fe/classes/medicine.dart';
@@ -11,6 +10,11 @@ import 'package:medic_count_fe/classes/medicine_group.dart';
 class AllDatas {
   List<MedicineGroup> allMedicineGroups = [];
   List<Medicine> allMedicines = [];
+
+  List<Medicine> temporaryMedicinesFromCreateNewGrroup = [];
+  List<Medicine> temporaryMedicineFromEditGroup = [];
+  late String temporaryGroupName;
+  String? temporaryGroupId;
 
   AllDatas._privateConstructor() {
     fetchAllData();
@@ -23,8 +27,6 @@ class AllDatas {
   }
 
   Future<void> fetchAllData() async {
-    // Navigator.of(context).push()
-
     await fetchAllMedicineGroups();
     await fetchAllMedicines();
 
@@ -67,6 +69,10 @@ class AllDatas {
     } else {
       print('Failed to fetch medicine. Error code: ${response.statusCode}');
     }
+  }
+
+  set setTemporaryGroupName(String temporaryGroupName) {
+    this.temporaryGroupName = temporaryGroupName;
   }
 }
 

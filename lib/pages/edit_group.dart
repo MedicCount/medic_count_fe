@@ -3,11 +3,14 @@ import 'package:intl/intl.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/buttons.dart';
+import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/pages/camera.dart';
 
 class EditGroupsPage extends StatefulWidget {
   final MedicineGroup medicineGroups;
-  const EditGroupsPage({Key? key, required this.medicineGroups})
+  final Function() reloadPage;
+
+  const EditGroupsPage({Key? key, required this.medicineGroups, required this.reloadPage})
       : super(key: key);
 
   @override
@@ -15,16 +18,9 @@ class EditGroupsPage extends StatefulWidget {
 }
 
 class _EditGroupsPageState extends State<EditGroupsPage> {
-  late MedicineGroup _tempMedicineGroup;
   final List<String> sortOptions = ['Name', 'Date Created'];
 
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    _tempMedicineGroup = MedicineGroup.clone(widget.medicineGroups);
-  }
 
   @override
   void dispose() {
@@ -33,12 +29,10 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
   }
 
   void saveToDatabase() {
-    widget.medicineGroups.setTimeStamp = _tempMedicineGroup.getTimestamp;
-    widget.medicineGroups.setName = _tempMedicineGroup.getName;
-    widget.medicineGroups.setMedicineGroup = _tempMedicineGroup;
+    widget.reloadPage();
   }
 
-  void reloadPage() {
+  void reloadPage(String mgid) {
     setState(() {});
   }
 
@@ -71,7 +65,7 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: TextField(
                   controller: TextEditingController(
-                    text: _tempMedicineGroup.getName
+                    text: widget.medicineGroups.getName
                   ),
                   decoration: const InputDecoration(
                     labelText: 'Enter Group Name',
@@ -93,7 +87,7 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                 child: BaseButton(
                   function: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Camera(
-                      medicines: _tempMedicineGroup.getMedicineGroup,
+                      medicines: AllDatas().temporaryMedicineFromEditGroup,
                       mgid: widget.medicineGroups.getMgid,
                       reloadPage: reloadPage,
                     )));
@@ -183,8 +177,11 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                         5: FlexColumnWidth(0.1),
                       },
                       children: <TableRow>[
-                        if (_tempMedicineGroup.getMedicineGroup.isNotEmpty)
-                          for (final Medicine medicine in _tempMedicineGroup.getMedicineGroup)
+                        if (widget.medicineGroups.getMedicineGroup.isNotEmpty)
+                          // List<Medicine> temp = [];
+                          
+
+                          for (final Medicine medicine in widget.medicineGroups.getMedicineGroup)
                             TableRow(
                               children: <Widget>[
                                 TableCell(
@@ -393,7 +390,7 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                 BaseButton(
                   function: () {
                     setState(() {
-                      _tempMedicineGroup.removeMedicine(medicine);
+                      widget.medicineGroups.removeMedicine(medicine);
                     });
                     Navigator.of(context).pop();
                   },

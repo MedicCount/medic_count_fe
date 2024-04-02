@@ -9,8 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/components/buttons.dart';
-import 'package:medic_count_fe/datasources/all_datasources.dart';
-import 'package:medic_count_fe/pages/home.dart';
 import 'package:path/path.dart';
 
 class ProcessImage extends StatefulWidget {
@@ -39,6 +37,7 @@ class _ProcessImageState extends State<ProcessImage> {
 
   @override
   void initState() {
+    medicine = Medicine("", "", File(""));
     super.initState();
     _croppedImage = widget.image;
   }
@@ -103,7 +102,7 @@ class _ProcessImageState extends State<ProcessImage> {
     String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/get_medicine/';
     var request = http.MultipartRequest('GET', Uri.parse(apiUrl));
     request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
-    request.fields['mid'] = "0P9ZMDwDMufNaT3Ohoor";
+    request.fields['mid'] = mid;
     var response = await request.send();
     if (response.statusCode == 200) {
       String responseBody = await response.stream.bytesToString();
@@ -116,33 +115,26 @@ class _ProcessImageState extends State<ProcessImage> {
     }
   }
 
-  Future<void> _modifyToGroup(String name, int counts) async {
-    String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/update_medicine/';
-    Uri uri = Uri.parse(apiUrl);
-    Uri modifiedUri = uri.replace(queryParameters: {
-      'uid': FirebaseAuth.instance.currentUser!.uid,
-      'mid': mid,
-    });
-
-    var request = http.MultipartRequest('PUT', modifiedUri);
-    Map<String, dynamic> jsonPayload = {
-      "counts": counts,
+  Future<void> _modifyToGroup(String name, int count) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request('PUT', Uri.parse(
+      '${dotenv.env['BACKEND_API_URL']!}/update_medicine/${FirebaseAuth.instance.currentUser!.uid}/$mid/'
+    ));
+    request.body = json.encode({
+      "counts": count,
       "name": name,
       "groupId": medicine.getGroupId,
-      "labels": medicine.getLabels,
-      // "counts": 100,
-      // "name": "Yes",
-      // "groupId": "Test",
-      // "labels": [],
-    };
-
-    request.fields['jsonPayload'] = jsonEncode(jsonPayload);
-    var response = await request.send();
+      "lables": medicine.getLabels
+    });
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
-      String responseBody = await response.stream.bytesToString();
-      print(responseBody);
-    } else {
-      print('Failed to modify image. Error code: ${response.statusCode}');
+      medicine.setName = name;
+      medicine.setCount = count;
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
     }
   }
 
@@ -225,10 +217,10 @@ class _ProcessImageState extends State<ProcessImage> {
                       int.parse(medicineTotalCountController.text.trim()),
                     );
                     widget.medicines.add(medicine);
-                    widget.reloadPage();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
+                    widget.reloadPage(widget.mgid);
+                    for (int i = 0; i < 3; i ++) {
+                      Navigator.of(context).pop();
+                    }
                   },
                   label: 'Confirm',
                 ),

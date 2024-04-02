@@ -5,7 +5,6 @@ class MedicineGroup {
   late String _name;
   late List<Medicine> _medicineGroup;
   late DateTime _timestamp;
-  
 
   MedicineGroup(this._mgid, this._name, this._medicineGroup) {
     _timestamp = DateTime.now();
