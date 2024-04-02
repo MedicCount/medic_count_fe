@@ -13,7 +13,14 @@ class LoadingPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Loading Page'),
+        title: const Text(
+          'Loading Page',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        automaticallyImplyLeading: false,
       ),
       body: const Center(
         child: CircularProgressIndicator(),

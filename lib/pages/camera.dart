@@ -3,18 +3,21 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/components/buttons.dart';
-import 'package:medic_count_fe/pages/process_image.dart';
+import 'package:medic_count_fe/pages/image.dart';
 
-import '../classes/medicine.dart';
-
-// ignore: must_be_immutable
 class Camera extends StatefulWidget {
   final String? mgid;
   List<Medicine> medicines;
   Function reloadPage;
 
-  Camera({Key? key, this.mgid, required this.medicines, required this.reloadPage}) : super(key: key);
+  Camera({
+    Key? key,
+    this.mgid,
+    required this.medicines,
+    required this.reloadPage,
+  }) : super(key: key);
 
   @override
   State<Camera> createState() => _CameraState();
@@ -25,17 +28,23 @@ class _CameraState extends State<Camera> {
   late CameraImage cameraImage;
   CameraController? controller;
   final picker = ImagePicker();
+  late TextEditingController medicineNameController;
+  late TextEditingController medicineTotalCountController;
 
   @override
   void initState() {
     loadCamera();
     super.initState();
+    medicineNameController = TextEditingController();
+    medicineTotalCountController = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    controller!.dispose();
+    controller?.dispose();
+    medicineNameController.dispose();
+    medicineTotalCountController.dispose();
   }
 
   void loadCamera() async {
@@ -49,31 +58,31 @@ class _CameraState extends State<Camera> {
     }
   }
 
-  Future<void> getImageFromGallery() async {
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      navigateToProcessImage(pickedFile);
-    }
-  }
-
-  Future<void> getImageFromCamera() async {
-    final XFile pickedFile = await controller!.takePicture();
-    navigateToProcessImage(pickedFile);
-    print(pickedFile);
-  }
-
-  void navigateToProcessImage(XFile image) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProcessImage(
-      image: File(image.path),
-      mgid: widget.mgid,
-      medicines: widget.medicines,
-      reloadPage: widget.reloadPage,
-    )));
-  }
-
   @override
   Widget build(BuildContext context) {
+    void navigateToProcessImage(XFile image) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShowImage(
+        image: File(image.path),
+        medicines: widget.medicines,
+        reloadPage: widget.reloadPage,
+        mgid: widget.mgid,
+      )));
+    }
+
+    Future<void> getImageFromGallery() async {
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        navigateToProcessImage(pickedFile);
+      }
+    }
+
+    Future<void> getImageFromCamera() async {
+      final XFile pickedFile = await controller!.takePicture();
+      navigateToProcessImage(pickedFile);
+      print(pickedFile);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(

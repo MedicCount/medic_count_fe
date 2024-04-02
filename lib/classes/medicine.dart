@@ -1,17 +1,18 @@
 import 'dart:io';
 
 class Medicine {
+  late String _mid;
   final String _groupId;
   String _name;
   File? _image;
   late int _counts;
   List<dynamic> labels = [];
 
-  Medicine(this._groupId, this._name, this._image) {
+  Medicine(this._mid, this._groupId, this._name, this._image) {
     _counts = 0;
   }
 
-  Medicine.withCount(this._groupId, this._name, this._image, this._counts);
+  Medicine.withCount(this._mid, this._groupId, this._name, this._image, this._counts);
 
   Medicine.withCountwithLabel(this._groupId, this._name, this._image, this._counts, this.labels);
 
@@ -41,6 +42,7 @@ class Medicine {
   File get getImage => _image!;
   int get getCount => _counts;
   List<dynamic> get getLabels => labels;
+  String get getMid => _mid;
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
     return Medicine.withCountwithLabel(

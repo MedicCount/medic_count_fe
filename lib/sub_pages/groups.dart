@@ -26,13 +26,8 @@ class _GroupsPageState extends State<GroupsPage> {
     super.dispose();
   }
 
-  void reloadPage(String? mgid) {
-    setState(() {
-      if (mgid != null) {
-        AllDatas().temporaryGroupId = mgid;
-        print("mgid: ${AllDatas().temporaryGroupId}");
-      }
-    });
+  void reloadPage() {
+    setState(() {});
   }
 
   @override
@@ -261,7 +256,7 @@ class _GroupsPageState extends State<GroupsPage> {
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: BaseButton(
                 function: () {},
-                label: 'Create New Group',
+                label: 'Create New Group and Detect',
               ),
             ),
             const SizedBox(height: 20),
