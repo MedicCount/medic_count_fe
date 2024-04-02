@@ -131,6 +131,7 @@ class _ProcessImageState extends State<ProcessImage> {
     if (response.statusCode == 200) {
       medicine.setName = name;
       medicine.setCount = count;
+      widget.reloadPage(widget.mgid);
       print(await response.stream.bytesToString());
     }
     else {
@@ -217,7 +218,6 @@ class _ProcessImageState extends State<ProcessImage> {
                       int.parse(medicineTotalCountController.text.trim()),
                     );
                     widget.medicines.add(medicine);
-                    widget.reloadPage(widget.mgid);
                     for (int i = 0; i < 3; i ++) {
                       Navigator.of(context).pop();
                     }

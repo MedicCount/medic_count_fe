@@ -12,7 +12,7 @@ class CountedPage extends StatefulWidget {
 }
 
 class _CountedPageState extends State<CountedPage> {
-  List<MedicineGroup> allMedicineGroups = AllDatas().allMedicineGroups;
+  late List<MedicineGroup> allMedicineGroups;
   List<MedicineGroup> filteredMedicineGroups = [];
   final List<String> sortOptions = ['Name', 'Date Created'];
   late String _selectedValue;
@@ -22,6 +22,7 @@ class _CountedPageState extends State<CountedPage> {
   @override
   void initState() {
     super.initState();
+    allMedicineGroups = AllDatas().allMedicineGroups;
     _selectedValue = sortOptions[0];
     _selectedOrder = 'Ascending';
     filteredMedicineGroups.addAll(allMedicineGroups);

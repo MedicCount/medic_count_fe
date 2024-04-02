@@ -16,9 +16,7 @@ class AllDatas {
   late String temporaryGroupName;
   String? temporaryGroupId;
 
-  AllDatas._privateConstructor() {
-    fetchAllData();
-  }
+  AllDatas._privateConstructor();
 
   static final AllDatas _instance = AllDatas._privateConstructor();
 
@@ -27,6 +25,9 @@ class AllDatas {
   }
 
   Future<void> fetchAllData() async {
+    allMedicineGroups.clear();
+    allMedicines.clear();
+
     await fetchAllMedicineGroups();
     await fetchAllMedicines();
 

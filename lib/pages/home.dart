@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:medic_count_fe/components/base_sign_out.dart';
 import 'package:medic_count_fe/sub_pages/counted.dart';
@@ -12,15 +14,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int indexBottomNav = 0;
-  List<Widget> widgetOption = [
-    const GroupsPage(),
-    const CountedPage(),
-    const StatPage(),
-    const SettingPage(),
-  ];
-
+  List<Widget> widgetOption = [];
   List<String> headerLabel = [
     'Create New Group',
     'Counted Medicines',
@@ -29,6 +25,24 @@ class _HomePageState extends State<HomePage> {
     'Edit Group'
   ];
   List<String> bottomNavLabel = ['Home', 'Groups', 'Statistics', 'Settings'];
+
+  @override
+  void initState() {
+    super.initState();
+    widgetOption = [
+      const GroupsPage(),
+      const CountedPage(),
+      const StatPage(),
+      const SettingPage(),
+    ];
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
