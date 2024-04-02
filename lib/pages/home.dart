@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:medic_count_fe/components/base_sign_out.dart';
 import 'package:medic_count_fe/sub_pages/counted.dart';
@@ -12,15 +14,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int indexBottomNav = 0;
-  List<Widget> widgetOption = [
-    const GroupsPage(),
-    const CountedPage(),
-    const StatPage(),
-    const SettingPage(),
-  ];
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  bool shouldExit = true;
+  void changeShouldExit(bool shouldExit) {
+    this.shouldExit = shouldExit;
+  }
 
+  int indexBottomNav = 0;
+  List<Widget> widgetOption = [];
   List<String> headerLabel = [
     'Create New Group',
     'Counted Medicines',
@@ -29,6 +30,31 @@ class _HomePageState extends State<HomePage> {
     'Edit Group'
   ];
   List<String> bottomNavLabel = ['Home', 'Groups', 'Statistics', 'Settings'];
+
+  @override
+  void initState() {
+    super.initState();
+    widgetOption = [
+      GroupsPage(changeShouldExit: changeShouldExit),
+      const CountedPage(),
+      const StatPage(),
+      const SettingPage(),
+    ];
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<AppExitResponse> didRequestAppExit() async {
+    final AppExitResponse response =
+        shouldExit ? AppExitResponse.exit : AppExitResponse.cancel;
+    return response;
+  }
 
   @override
   Widget build(BuildContext context) {
