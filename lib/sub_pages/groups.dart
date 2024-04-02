@@ -46,13 +46,17 @@ class _GroupsPageState extends State<GroupsPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter Group Name',
                   border: OutlineInputBorder(),
                 ),
+                controller: TextEditingController(text: AllDatas().temporaryGroupNameFromCreateNewGroup),
+                onChanged: (value) => {
+                  AllDatas().temporaryGroupNameFromCreateNewGroup = value
+                },
               ),
             ),
             const SizedBox(height: 15),
@@ -244,7 +248,10 @@ class _GroupsPageState extends State<GroupsPage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: BaseButton(
-                function: () {},
+                function: () async {
+                  await AllDatas().detectAllTemporaryCreateNewGroup();
+                  reloadPage();
+                },
                 label: 'Create New Group and Detect',
               ),
             ),

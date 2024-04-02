@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class Medicine {
   late String _mid;
-  final String _groupId;
+  String _groupId;
   String _name;
   File? _image;
   late int _counts;
@@ -40,6 +40,14 @@ class Medicine {
 
   set setCount(int counts) {
     _counts = counts;
+  }
+
+  set setMid(String mid) {
+    _mid = mid;
+  }
+
+  set setGroupID(String groupId) {
+    _groupId = groupId;
   }
 
   String get getGroupId => _groupId;

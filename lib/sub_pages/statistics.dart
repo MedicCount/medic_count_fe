@@ -14,7 +14,7 @@ class StatPage extends StatefulWidget {
 }
 
 class _StatPageState extends State<StatPage> {
-  late String _selectedGroup;
+  String? _selectedGroup;
   late List<MedicineGroup> allMedicineGroups;
   late List<Medicine> allMedicines;
 
@@ -23,7 +23,9 @@ class _StatPageState extends State<StatPage> {
     super.initState();
     allMedicineGroups = AllDatas().allMedicineGroups;
     allMedicines = AllDatas().allMedicines;
-    _selectedGroup = allMedicineGroups[0].getMgid;
+    if (!allMedicineGroups.isEmpty) {
+      _selectedGroup = allMedicineGroups[0].getMgid;
+    }
   }
 
   @override
@@ -47,14 +49,15 @@ class _StatPageState extends State<StatPage> {
 
     // set default value for dropdown
     Map<String, int> eachMedicineCount = {};
-
-    for (Medicine m in allMedicines) {
-      if (m.getGroupId == _selectedGroup) {
-        if (eachMedicineCount.containsKey(m.getName)) {
-          eachMedicineCount[m.getName] =
-              eachMedicineCount[m.getName]! + m.getCount;
-        } else {
-          eachMedicineCount[m.getName] = m.getCount;
+    if (allMedicines.isEmpty) {
+      for (Medicine m in allMedicines) {
+        if (m.getGroupId == _selectedGroup) {
+          if (eachMedicineCount.containsKey(m.getName)) {
+            eachMedicineCount[m.getName] =
+                eachMedicineCount[m.getName]! + m.getCount;
+          } else {
+            eachMedicineCount[m.getName] = m.getCount;
+          }
         }
       }
     }

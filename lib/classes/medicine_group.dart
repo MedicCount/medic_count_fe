@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:medic_count_fe/classes/medicine.dart';
@@ -57,19 +60,39 @@ class MedicineGroup {
       json['_mgid'],
       json['groupName'],
       [],
-      DateTime.parse(json['createdDate']),
+      DateTime.parse(json['_createdDate']),
     );
   }
 
-  Future<void> modifyMedicineGroup() async {
-    
+  Future<void> modifyMedicineGroup(String name) async {
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('PUT',
+      Uri.parse('${dotenv.env['BACKEND_API_URL']!}/update_medicine_group/${
+        FirebaseAuth.instance.currentUser!.uid
+      }/$_mgid/'));
+    request.body = json.encode({
+      "groupName": name,
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      _name = name;
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
   }
 
   Future<void> deleteMedicineGroup() async {
     var request = http.MultipartRequest('DELETE', Uri.parse('${dotenv.env['BACKEND_API_URL']!}/delete_medicine_group/'));
     request.fields.addAll({
-      'uid': 'lygtQE3vATT4Ng3gUQSpt7tDsZD3',
-      'mgid': '0dabWZ8AoNYCCSTyDmgw'
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'mgid': _mgid
     });
 
     http.StreamedResponse response = await request.send();
