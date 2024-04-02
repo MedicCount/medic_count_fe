@@ -78,6 +78,7 @@ class _CountedPageState extends State<CountedPage> {
       allMedicineGroups.removeWhere((group) => group == deletedGroup);
       filteredMedicineGroups.removeWhere((group) => group == deletedGroup);
     });
+    deletedGroup.deleteMedicineGroup();
   }
 
   void handleUpdate(MedicineGroup editGroup) {
@@ -86,94 +87,99 @@ class _CountedPageState extends State<CountedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextField(
-            controller: searchController,
-            onChanged: (value) {
-              filterSearchResults(value.trim());
-            },
-            decoration: const InputDecoration(
-              labelText: 'Search',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.search),
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: searchController,
+              onChanged: (value) {
+                filterSearchResults(value.trim());
+              },
+              decoration: const InputDecoration(
+                labelText: 'Search',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              const Text(
-                'Sort by',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(width: 10),
-              DropdownButton<String>(
-                value: _selectedValue,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedValue = newValue!;
-                    sortMedicineGroups();
-                  });
-                },
-                items:
-                    sortOptions.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(width: 10),
-              DropdownButton<String>(
-                value: _selectedOrder,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedOrder = newValue!;
-                    sortMedicineGroups();
-                  });
-                },
-                items: ['Ascending', 'Descending']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Expanded(
-            child: Scrollbar(
-              thickness: 5,
-              thumbVisibility: true,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children:
-                        List.generate(filteredMedicineGroups.length, (index) {
-                      MedicineGroup temp = filteredMedicineGroups[index];
-                      return MedicineGroupDisplay(
-                        groupName: temp.getName,
-                        timeCreated: temp.getTimestamp,
-                        medicineGroup: temp,
-                        onDelete: () => handleDelete(temp),
-                        onUpdate: () => handleUpdate(temp),
-                        reloadPage: reloadPage,
-                      );
-                    }),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const Text(
+                  'Sort by',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 10),
+                DropdownButton<String>(
+                  value: _selectedValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedValue = newValue!;
+                      sortMedicineGroups();
+                    });
+                  },
+                  items:
+                      sortOptions.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(width: 10),
+                DropdownButton<String>(
+                  value: _selectedOrder,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedOrder = newValue!;
+                      sortMedicineGroups();
+                    });
+                  },
+                  items: ['Ascending', 'Descending']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 15),
+            Expanded(
+              child: Scrollbar(
+                thickness: 5,
+                thumbVisibility: true,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children:
+                          List.generate(filteredMedicineGroups.length, (index) {
+                        MedicineGroup temp = filteredMedicineGroups[index];
+                        return MedicineGroupDisplay(
+                          groupName: temp.getName,
+                          timeCreated: temp.getTimestamp,
+                          medicineGroup: temp,
+                          onDelete: () => handleDelete(temp),
+                          onUpdate: () => handleUpdate(temp),
+                          reloadPage: reloadPage,
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

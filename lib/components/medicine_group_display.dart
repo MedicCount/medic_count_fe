@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/datasources/all_datasources.dart';
@@ -213,7 +216,19 @@ class _MedicineGroupDisplayState extends State<MedicineGroupDisplay> {
                           maxLines: 1,
                         ),
                         const SizedBox(width: 20),
-                        const Icon(Icons.image),
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(
+                            Icons.image,
+                          ),
+                          style: const ButtonStyle(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () {
+                            _showImageAlert(context, medicine);
+                          },
+                        ),
                       ],
                     ),
                   ],
@@ -223,6 +238,46 @@ class _MedicineGroupDisplayState extends State<MedicineGroupDisplay> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showImageAlert(BuildContext context, Medicine medicine) async {
+    Uint8List? bytes = await medicine.fetchImage();
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Medicine Image',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: bytes != null
+                ? Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
+                  )
+                : const SizedBox(),
+          ),
+        );
+      },
     );
   }
 }

@@ -137,9 +137,7 @@ class AllDatas {
           filename: basename(medicine.getImage.path));
       request.files.add(multipartFile);
       request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
-      if (temporaryGroupId != null) {
-        request.fields['mgid'] = temporaryGroupId!;
-      }
+      request.fields['mgid'] = mgid;
       var response = await request.send();
       if (response.statusCode == 200) {
         String responseBody = await response.stream.bytesToString();

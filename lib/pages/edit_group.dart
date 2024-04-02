@@ -7,6 +7,7 @@ import 'package:medic_count_fe/classes/medicine_group.dart';
 import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/pages/camera.dart';
+import 'package:medic_count_fe/pages/loading.dart';
 
 class EditGroupsPage extends StatefulWidget {
   final MedicineGroup medicineGroups;
@@ -87,6 +88,9 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                       labelText: 'Enter Group Name',
                       border: OutlineInputBorder(),
                     ),
+                    onChanged: (value) => {
+                      widget.medicineGroups.setName = value
+                    },
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -250,6 +254,9 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                                     verticalAlignment:
                                         TableCellVerticalAlignment.middle,
                                     child: IconButton(
+                                      style: const ButtonStyle(
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
                                       icon: const Icon(Icons.image),
                                       onPressed: () {
                                         _showImageAlert(context, medicine);
@@ -260,6 +267,9 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                                     verticalAlignment:
                                         TableCellVerticalAlignment.middle,
                                     child: IconButton(
+                                      style: const ButtonStyle(
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
                                       icon: const Icon(Icons.edit),
                                       onPressed: () {
                                         _showEditPopup(context, medicine);
@@ -270,6 +280,9 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                                     verticalAlignment:
                                         TableCellVerticalAlignment.middle,
                                     child: IconButton(
+                                      style: const ButtonStyle(
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
                                       icon: const Icon(
                                           Icons.remove_circle_outline_outlined),
                                       onPressed: () {
@@ -304,9 +317,13 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: BaseButton(
-                          function: () {
-                            saveToDatabase();
+                          function: () async {
+                            await AllDatas().detectAllTemporaryEditGroup(
+                              widget.medicineGroups.getMgid, widget.medicineGroups.getName);
+                            if (!context.mounted) return;
                             Navigator.of(context).pop();
+                            if (!context.mounted) return;
+                            LoadingPage.navigateToLoadingPage(context);
                           },
                           label: 'Save and Detect',
                         ),
@@ -385,6 +402,7 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                       int.tryParse(countController.text) ?? 0
                     );
                     reloadPage();
+                    if (!context.mounted) return;
                     Navigator.of(context).pop();
                   },
                   label: 'Save',
@@ -452,6 +470,9 @@ class _EditGroupsPageState extends State<EditGroupsPage> {
                 ),
               ),
               IconButton(
+                style: const ButtonStyle(
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
                 icon: const Icon(Icons.close),
                 onPressed: () {
                   Navigator.of(context).pop();

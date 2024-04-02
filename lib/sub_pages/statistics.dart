@@ -65,7 +65,7 @@ class _StatPageState extends State<StatPage> {
     Widget medicineCard(String name, int counts) {
       return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
-        child: Container(
+        child: SizedBox(
           width: 160,
           child: Card(
             color: Theme.of(context).colorScheme.secondary,
@@ -75,7 +75,7 @@ class _StatPageState extends State<StatPage> {
                 children: [
                   Row(
                     children: [
-                      Text('$name'),
+                      Text(name),
                     ],
                   ),
                   Divider(
@@ -101,100 +101,101 @@ class _StatPageState extends State<StatPage> {
       );
     }
 
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).colorScheme.primary,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Medicines',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: DropdownButton<String>(
+                        value: _selectedGroup,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedGroup = newValue!;
+                          });
+                        },
+                        items: allMedicineGroups.map<DropdownMenuItem<String>>(
+                          (MedicineGroup group) {
+                            return DropdownMenuItem<String>(
+                              value: group.getMgid,
+                              child: Text(group.getName),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    ),
+                  ],
                 ),
-                margin: const EdgeInsets.only(bottom: 20),
-                child: ListTile(
-                  title: const Text(
-                    "OVERALL :))",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                const SizedBox(height: 15),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 3.5,
+                    child: BaseDoughnutChart(
+                      data: eachMedicineCount.entries
+                        .map((e) => ChartData(e.key, e.value))
+                        .toList(),
                     ),
                   ),
-                  subtitle: Text(
-                    "number of each group",
-                    style: TextStyle(fontSize: 15, color: Colors.grey[300]),
-                  ),
                 ),
-              ),
-              SizedBox(
-                height: 250,
-                child: BaseLineChart(
-                  data: eachGroupCount.entries
-                      .map(
-                        (e) => ChartData(
-                          e.value.key + ' (${e.value.value})',
-                          e.value.value,
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 10),
-                child: Divider(
-                  color: Theme.of(context).colorScheme.secondary,
-                  thickness: 2,
-                ),
-              ),
-              Row(
-                children: [
-                  DropdownButton<String>(
-                    value: _selectedGroup,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGroup = newValue!;
-                      });
-                    },
-                    items: allMedicineGroups.map<DropdownMenuItem<String>>(
-                      (MedicineGroup group) {
-                        return DropdownMenuItem<String>(
-                          value: group.getMgid,
-                          child: Text(group.getName),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                child: SizedBox(
-                  height: 200,
-                  child: BaseDoughnutChart(
-                    data: eachMedicineCount.entries
-                        .map((e) => ChartData(e.key, e.value))
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: eachMedicineCount.entries
+                        .map((e) => medicineCard(e.key, e.value))
                         .toList(),
                   ),
                 ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: eachMedicineCount.entries
-                      .map((e) => medicineCard(e.key, e.value))
-                      .toList(),
+                const SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Total Medicines',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SizedBox(
+                    height: 250,
+                    child: BaseLineChart(
+                      data: eachGroupCount.entries
+                        .map(
+                          (e) => ChartData(
+                            '${e.value.key} (${e.value.value})',
+                            e.value.value,
+                          ),
+                        )
+                        .toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

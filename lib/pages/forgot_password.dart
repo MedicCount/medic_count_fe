@@ -20,6 +20,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         email: _emailController.text.trim(),
       );
       if (context.mounted) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Password Reset Email Sent!'),

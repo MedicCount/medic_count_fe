@@ -28,6 +28,13 @@ class LoadingPage extends StatelessWidget {
     );
   }
 
+  static void navigateToLoadingPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LoadingPage()),
+    );
+  }
+
   void _fetchData(BuildContext context) async {
     await AllDatas().fetchAllData();
     await Future.delayed(const Duration(seconds: 2));
@@ -36,7 +43,7 @@ class LoadingPage extends StatelessWidget {
 
     if (apiSuccess) {
       if (!context.mounted) return;
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const HomePage(),
         ),

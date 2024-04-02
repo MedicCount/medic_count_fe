@@ -14,18 +14,25 @@ class _BaseCollapseState extends State<BaseCollapse> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide.none,
+      ),
       child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiary,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        decoration: const BoxDecoration(
+          color: Color(0xFFF4F4F4),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        child: ExpansionTile(
-          title: Text(widget.name), // accessing name from widget
-          subtitle: Text('Leading expansion arrow icon'),
-          controlAffinity: ListTileControlAffinity.leading,
-          children: <Widget>[
-            ListTile(title: Text('This is tile number 3')),
-          ],
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            title: Text(widget.name),
+            subtitle: const Text('Leading expansion arrow icon'),
+            controlAffinity: ListTileControlAffinity.leading,
+            children: const <Widget>[
+              ListTile(title: Text('This is tile number 3')),
+            ],
+          ),
         ),
       ),
     );

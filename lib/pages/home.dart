@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:medic_count_fe/components/base_sign_out.dart';
 import 'package:medic_count_fe/sub_pages/counted.dart';
@@ -18,8 +16,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int indexBottomNav = 0;
   List<Widget> widgetOption = [];
   List<String> headerLabel = [
-    'Create New Group',
     'Counted Medicines',
+    'Create New Group',
     'Statistics',
     'Settings',
     'Edit Group'
@@ -30,8 +28,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     widgetOption = [
-      const GroupsPage(),
       const CountedPage(),
+      const GroupsPage(),
       const StatPage(),
       const SettingPage(),
     ];
