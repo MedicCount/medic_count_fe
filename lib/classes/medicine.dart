@@ -72,7 +72,7 @@ class Medicine {
       return await response.stream.toBytes();
     } else {
       print(response.reasonPhrase);
-      return null;
+      return Uint8List.fromList(_image!.readAsBytesSync());
     }
   }
 

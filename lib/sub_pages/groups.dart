@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:medic_count_fe/classes/medicine.dart';
 import 'package:medic_count_fe/components/buttons.dart';
 import 'package:medic_count_fe/datasources/all_datasources.dart';
@@ -72,7 +71,7 @@ class _GroupsPageState extends State<GroupsPage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => Camera(
                       reloadPage: reloadPage,
-                      medicines: AllDatas().temporaryMedicinesFromCreateNewGrroup,
+                      medicines: AllDatas().temporaryMedicinesFromCreateNewGroup,
                       mgid: AllDatas().temporaryGroupId,
                     )));
                 },
@@ -113,19 +112,19 @@ class _GroupsPageState extends State<GroupsPage> {
                     ),
                   ),
                   TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          'Total Count',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        'Total Count',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
                         ),
                       ),
                     ),
+                  ),
                   TableCell(
                     verticalAlignment: TableCellVerticalAlignment.middle,
                     child: SizedBox(width: 8),
@@ -160,8 +159,8 @@ class _GroupsPageState extends State<GroupsPage> {
                       5: FlexColumnWidth(0.1),
                     },
                     children: <TableRow>[
-                      if (AllDatas().temporaryMedicinesFromCreateNewGrroup.isNotEmpty)
-                        for (final Medicine medicine in AllDatas().temporaryMedicinesFromCreateNewGrroup)
+                      if (AllDatas().temporaryMedicinesFromCreateNewGroup.isNotEmpty)
+                        for (final Medicine medicine in AllDatas().temporaryMedicinesFromCreateNewGroup)
                           TableRow(
                             children: <Widget>[
                               TableCell(
@@ -191,23 +190,6 @@ class _GroupsPageState extends State<GroupsPage> {
                                       ),
                                     ),
                                   ],
-                                ),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    TableCellVerticalAlignment.middle,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    NumberFormat('#,##0')
-                                        .format(medicine.getCount),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
                                 ),
                               ),
                               TableCell(
@@ -346,9 +328,11 @@ class _GroupsPageState extends State<GroupsPage> {
                 ),
                 const SizedBox(width: 20),
                 BaseButton(
-                  function: () async {
-                    AllDatas().temporaryMedicineFromEditGroup.removeWhere((element) => element == medicine);
-                    await medicine.deleteMedicine();
+                  function: () {
+                    setState(() {
+                      AllDatas().temporaryMedicinesFromCreateNewGroup.removeWhere((element) => element == medicine);
+                    });
+                    reloadPage();
                     Navigator.of(context).pop();
                   },
                   label: 'Delete',

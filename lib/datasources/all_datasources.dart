@@ -10,7 +10,7 @@ class AllDatas {
   List<MedicineGroup> allMedicineGroups = [];
   List<Medicine> allMedicines = [];
 
-  List<Medicine> temporaryMedicinesFromCreateNewGrroup = [];
+  List<Medicine> temporaryMedicinesFromCreateNewGroup = [];
   List<Medicine> temporaryMedicineFromEditGroup = [];
   late String temporaryGroupName;
   String? temporaryGroupId;
