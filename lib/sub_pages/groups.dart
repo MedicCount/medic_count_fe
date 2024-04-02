@@ -6,9 +6,7 @@ import 'package:medic_count_fe/datasources/all_datasources.dart';
 import 'package:medic_count_fe/pages/camera.dart';
 
 class GroupsPage extends StatefulWidget {
-  final Function changeShouldExit;
-  
-  const GroupsPage({Key? key, required this.changeShouldExit}) : super(key: key);
+  const GroupsPage({Key? key}) : super(key: key);
 
   @override
   State<GroupsPage> createState() => _GroupsPageState();
@@ -20,12 +18,6 @@ class _GroupsPageState extends State<GroupsPage> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      widget.changeShouldExit(false);
-      AllDatas().fetchAllData().then((value) => setState(() {}));
-      widget.changeShouldExit(true);
-    });
   }
 
   @override

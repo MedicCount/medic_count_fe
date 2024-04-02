@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medic_count_fe/firebase_options.dart';
-import 'package:medic_count_fe/pages/home.dart';
+import 'package:medic_count_fe/pages/loading.dart';
 import 'package:medic_count_fe/pages/not_found.dart';
 import 'package:medic_count_fe/pages/prepage.dart';
 
@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/home':
-            return _checkAuthAndRoute(const HomePage());
+            return _checkAuthAndRoute(const LoadingPage());
           case '/pre':
             return MaterialPageRoute(builder: (_) => const PrePage());
           default:
@@ -106,7 +106,7 @@ class AuthCheck extends StatelessWidget {
           );
         } else {
           if (snapshot.hasData) {
-            return const HomePage();
+            return const LoadingPage();
           } else {
             return const PrePage();
           }

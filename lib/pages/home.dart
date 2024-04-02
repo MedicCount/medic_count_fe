@@ -15,11 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  bool shouldExit = true;
-  void changeShouldExit(bool shouldExit) {
-    this.shouldExit = shouldExit;
-  }
-
   int indexBottomNav = 0;
   List<Widget> widgetOption = [];
   List<String> headerLabel = [
@@ -35,7 +30,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     widgetOption = [
-      GroupsPage(changeShouldExit: changeShouldExit),
+      const GroupsPage(),
       const CountedPage(),
       const StatPage(),
       const SettingPage(),
@@ -47,13 +42,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  Future<AppExitResponse> didRequestAppExit() async {
-    final AppExitResponse response =
-        shouldExit ? AppExitResponse.exit : AppExitResponse.cancel;
-    return response;
   }
 
   @override
