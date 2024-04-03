@@ -91,7 +91,7 @@ class AllDatas {
         medicine.setMid = jsonDecode(responseBody)['firestore']['medicine'];
         temporaryGroupId ??= jsonDecode(responseBody)['firestore']['medicineGroup'];
         medicine.setGroupID = temporaryGroupId!;
-        medicine.modifyMedicine(medicine.getName, medicine.getCount);
+        medicine.modifyMedicine(medicine.getName, await medicine.fetchMedicine(medicine, medicine.getMid));
       } else {
         print('Failed to upload image. Error code: ${response.statusCode}');
       }
