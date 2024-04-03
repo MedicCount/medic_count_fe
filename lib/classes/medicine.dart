@@ -127,4 +127,20 @@ class Medicine {
       print(response.reasonPhrase);
     }
   }
+
+  Future<int> fetchMedicine(Medicine medicine, String mid) async {
+    String apiUrl = '${dotenv.env['BACKEND_API_URL']!}/get_medicine/';
+    var request = http.MultipartRequest('GET', Uri.parse(apiUrl));
+    request.fields['uid'] = FirebaseAuth.instance.currentUser!.uid;
+    request.fields['mid'] = mid;
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      print('Medicine fetch successfully');
+      return jsonDecode(responseBody)['medicine']['counts'];
+    } else {
+      print('Failed to fetch medicine. Error code: ${response.statusCode}');
+      return 0;
+    }
+  }
 }
