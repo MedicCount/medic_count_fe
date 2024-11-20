@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -43,8 +44,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAaKfIxQM3X38brnfoRprHVZH6WC5rgYG4',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_WEB_API']!,
     appId: '1:501019962241:web:542a2dd153801b26c85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',
@@ -53,16 +54,16 @@ class DefaultFirebaseOptions {
     measurementId: 'G-WWJH9LJ42W',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBkw8ESW1w09cODsQm51LTXdQe8PQy76sw',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_ANDROID_API']!,
     appId: '1:501019962241:android:d122b59e8ab319f0c85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',
     storageBucket: 'medicine-proj.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBCvPvshAxQPHW9Sahv1vQMVnUcKIh_a60',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_APPLE_API']!,
     appId: '1:501019962241:ios:a9a288d157efed73c85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',
@@ -71,8 +72,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.medicCountFe',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBCvPvshAxQPHW9Sahv1vQMVnUcKIh_a60',
+  static FirebaseOptions macos = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_APPLE_API']!,
     appId: '1:501019962241:ios:8405e9014bc5c53bc85680',
     messagingSenderId: '501019962241',
     projectId: 'medicine-proj',

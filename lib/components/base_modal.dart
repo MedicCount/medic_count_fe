@@ -19,7 +19,7 @@ class BaseModal extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          surfaceTintColor: Colors.white,
+          surfaceTintColor: Theme.of(context).colorScheme.secondary,
           title: Text(header),
           content: Text(body,),
           actions: buttons,
@@ -30,6 +30,6 @@ class BaseModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return const Placeholder();
   }
 }
