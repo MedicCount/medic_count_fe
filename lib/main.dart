@@ -42,17 +42,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Medic Count',
-      theme: ThemeData(
-        fontFamily: GoogleFonts.outfit().fontFamily,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF8000FF),
-          primary: const Color(0xFF8000FF),
-          secondary: const Color(0xFFF4F4F4),
-          tertiary: const Color(0xFFEDEDED),
+        theme: ThemeData(
+          fontFamily: GoogleFonts.outfit().fontFamily,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF8000FF),
+            primary: const Color(0xFF8000FF),
+            secondary: const Color(0xFFF4F4F4),
+            tertiary: const Color(0xFFEDEDED),
+          ),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
-      ),
-      home: AuthCheck(authStateStream: _authStateStream),
+        home: AuthCheck(authStateStream: _authStateStream),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/home':
